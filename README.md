@@ -36,7 +36,7 @@ const result = await client.validateSimple({
   vatIdForeign: 'ATU12345678'
 });
 
-console.log(client.isSuccessStatus(result.status));
+console.log(result);
 ```
 
 or
@@ -50,7 +50,7 @@ const result = await client.validateQualified({
   location: 'Wien'
 });
 
-console.log(result.company);
+console.log(result);
 ```
 
 > [!TIP]
@@ -94,11 +94,9 @@ Validates only the VAT-ID without company data verification:
 await client.validateSimple({
   vatIdOwn: 'DE123456789',     // Your German VAT-ID (required)
   vatIdForeign: 'ATU12345678', // VAT-ID to validate (required)
+  includeRaw: true,            // Include raw response (optional)
 });
 ```
-
-> [!TIP]
-> You may set `true` as the second parameter to get an [`ExtendedResponse`](#extended-response) object.
 
 #### Qualified Validation
 
@@ -111,7 +109,8 @@ await client.validateQualified({
   company: 'Test GmbH',        // Company name (required)
   location: 'Wien',            // City (required)
   street: 'Musterstr. 1',      // Street address (optional)
-  zip: '1010'                  // Postal code (optional)
+  zip: '1010',                 // Postal code (optional)
+  includeRaw: true,            // Include raw response (optional)
 });
 ```
 
@@ -165,6 +164,7 @@ interface Response {
   street?: QualifiedResultCode;    // Street validation result
   zip?: QualifiedResultCode;       // ZIP code validation result
   location?: QualifiedResultCode;  // Location validation result
+  raw?: string;                // Raw response from API (only if includeRaw is true)
 }
 ```
 
@@ -198,7 +198,8 @@ interface ExtendedResponse {
   company?: QualifiedResultCode;
   street?: QualifiedResultCode;
   zip?: QualifiedResultCode;
-  location?: QualifiedResultCode;  // Location validation result
+  location?: QualifiedResultCode;
+  raw?: string;
 }
 ```
 
@@ -283,6 +284,9 @@ While the migration helper tries to maintain API compatibility, there are some u
 | Error descriptions | Based on error code | Based on REST API status messages |
 | Additional field | - | `status` (new REST API status code) |
 
+> [!NOTE]
+> API status codes have been [mapped](./src/migration-helper.ts#L33) to legacy codes to the best of our knowledge. If an API status does not correspond to a legacy code, the 999 legacy code is being returned. We recommend to relay on API status.
+
 > [!TIP]
 > See the [migration helper example](./examples/migration-helper.ts) for a complete usage demonstration.
 
@@ -300,13 +304,13 @@ The following tables show the parameter naming mapping between [evatr](https://g
 | `city`                  | `location`                   |
 | `street`                | `street`                     |
 | `zip`                   | `zip`                        |
-| `includeRaw`            | -                            |
+| `includeRaw`            | `includeRaw`                 |
 
 #### Response
 
 | evatr                          | evatr-api                               |
 |--------------------------------|-----------------------------------------|
-| `raw`                          | -                                       |
+| `raw` (XML)                    | `raw` (JSON)                            |
 | `date`                         | `timestamp` {0, 10} (format YYYY-MM-DD) |
 | `time`                         | `timestamp` {11, 8} (format HH:MM:SS)   |
 | `errorCode`                    | - (replaced by `status`)                |

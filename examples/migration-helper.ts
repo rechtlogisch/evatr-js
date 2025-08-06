@@ -12,7 +12,7 @@ async function migrationExample(): Promise<void> {
     companyName: 'Musterhaus GmbH & Co KG',
     city: 'musterort',
     zip: '12345',
-    street: 'Musterstrasse 22'
+    street: 'Musterstrasse 22',
   });
 
   console.log(simpleResult);

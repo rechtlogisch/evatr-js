@@ -46,10 +46,12 @@ export interface Request {
     location?: string;
     street?: string;
     zip?: string;
+    includeRaw?: boolean;
 }
 export type SimpleRequest = {
     vatIdOwn: string;
     vatIdForeign: string;
+    includeRaw?: boolean;
 };
 export type QualifiedRequest = {
     vatIdOwn: string;
@@ -58,6 +60,7 @@ export type QualifiedRequest = {
     location: string;
     street?: string;
     zip?: string;
+    includeRaw?: boolean;
 };
 export interface Response {
     timestamp: string;
@@ -70,6 +73,7 @@ export interface Response {
     street?: QualifiedResultCode;
     zip?: QualifiedResultCode;
     location?: QualifiedResultCode;
+    raw?: string;
 }
 export interface ExtendedResponse {
     timestamp: Date;
@@ -84,6 +88,7 @@ export interface ExtendedResponse {
     street?: QualifiedResultCode;
     zip?: QualifiedResultCode;
     location?: QualifiedResultCode;
+    raw?: string;
 }
 /**
  * Validation result codes for qualified validation

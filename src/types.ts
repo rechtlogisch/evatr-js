@@ -49,11 +49,13 @@ export interface Request {
   location?: string;
   street?: string;
   zip?: string;
+  includeRaw?: boolean;
 }
 
 export type SimpleRequest = {
   vatIdOwn: string;
   vatIdForeign: string;
+  includeRaw?: boolean;
 }
 
 export type QualifiedRequest = {
@@ -63,6 +65,7 @@ export type QualifiedRequest = {
   location: string;
   street?: string;
   zip?: string;
+  includeRaw?: boolean;
 }
 
 export interface Response {
@@ -76,6 +79,7 @@ export interface Response {
   street?: QualifiedResultCode;
   zip?: QualifiedResultCode;
   location?: QualifiedResultCode;
+  raw?: string;
 }
 
 export interface ExtendedResponse {
@@ -91,6 +95,7 @@ export interface ExtendedResponse {
   street?: QualifiedResultCode;
   zip?: QualifiedResultCode;
   location?: QualifiedResultCode;
+  raw?: string;
 }
 
 /**

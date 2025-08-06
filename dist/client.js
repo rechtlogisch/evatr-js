@@ -38,6 +38,7 @@ class EvatrClient {
         const payload = {
             vatIdOwn: request.vatIdOwn,
             vatIdForeign: request.vatIdForeign,
+            includeRaw: request.includeRaw,
         };
         return this.performValidation(payload, extended);
     }
@@ -49,6 +50,7 @@ class EvatrClient {
             location: request.location,
             street: request.street,
             zip: request.zip,
+            includeRaw: request.includeRaw,
         };
         return this.performValidation(payload, extended);
     }
@@ -207,6 +209,7 @@ class EvatrClient {
             street: response.street,
             zip: response.zip,
             location: response.location,
+            raw: response.raw,
         };
     }
     /**
@@ -236,6 +239,14 @@ class EvatrClient {
             const response = await this.httpClient.post(constants_1.ENDPOINTS.VALIDATION, apiPayload);
             // Map API response to English property names
             const basicResponse = this.mapFromApiResponse(response.data, formattedRequest.vatIdOwn, formattedRequest.vatIdForeign);
+            // Include raw response data if requested
+            if (request.includeRaw === true) {
+                const rawData = {
+                    headers: response.headers,
+                    data: response.data
+                };
+                basicResponse.raw = JSON.stringify(rawData);
+            }
             if (extended) {
                 return this.mapToExtendedResponse(basicResponse);
             }

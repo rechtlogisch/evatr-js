@@ -103,6 +103,63 @@ describe('EvatrClient', () => {
       // Ensure no API call was made for invalid VAT-ID
       expect(mockAxiosInstance.post).not.toHaveBeenCalled();
     });
+
+    it('should include raw response data when includeRaw is true', async () => {
+      const mockResponse = {
+        data: {
+          anfrageZeitpunkt: '2025-08-03T20:30:00Z',
+          status: 'evatr-0000',
+        },
+        headers: {
+          'content-type': 'application/json',
+          'x-request-id': '12345',
+        },
+      };
+
+      mockAxiosInstance.post.mockResolvedValue(mockResponse);
+
+      const result = await client.validateSimple({
+        vatIdOwn: 'DE123456789',
+        vatIdForeign: 'ATU12345678',
+        includeRaw: true,
+      });
+
+      expect(result.status).toBe('evatr-0000');
+      expect(result.raw).toBeDefined();
+      
+      const rawData = JSON.parse(result.raw!);
+      expect(rawData.headers).toEqual(mockResponse.headers);
+      expect(rawData.data).toEqual(mockResponse.data);
+    });
+
+    it('should not include raw response data when includeRaw is false or undefined', async () => {
+      const mockResponse = {
+        data: {
+          anfrageZeitpunkt: '2025-08-03T20:30:00Z',
+          status: 'evatr-0000',
+        },
+        headers: {
+          'content-type': 'application/json',
+        },
+      };
+
+      mockAxiosInstance.post.mockResolvedValue(mockResponse);
+
+      // Test with includeRaw: false
+      const result1 = await client.validateSimple({
+        vatIdOwn: 'DE123456789',
+        vatIdForeign: 'ATU12345678',
+        includeRaw: false,
+      });
+      expect(result1.raw).toBeUndefined();
+
+      // Test with includeRaw undefined (default)
+      const result2 = await client.validateSimple({
+        vatIdOwn: 'DE123456789',
+        vatIdForeign: 'ATU12345678',
+      });
+      expect(result2.raw).toBeUndefined();
+    });
   });
 
   describe('validateQualified', () => {
@@ -144,6 +201,40 @@ describe('EvatrClient', () => {
       expect(result.location).toBe('A');
       expect(result.street).toBe('A');
       expect(result.zip).toBe('A');
+    });
+
+    it('should include raw response data when includeRaw is true', async () => {
+      const mockResponse = {
+        data: {
+          anfrageZeitpunkt: '2025-08-03T20:30:00Z',
+          status: 'evatr-0000',
+          ergFirmenname: 'A',
+          ergOrt: 'A',
+          ergStrasse: 'A',
+          ergPlz: 'A',
+        },
+        headers: {
+          'content-type': 'application/json',
+          'x-correlation-id': 'abc123',
+        },
+      };
+
+      mockAxiosInstance.post.mockResolvedValue(mockResponse);
+
+      const result = await client.validateQualified({
+        vatIdOwn: 'DE123456789',
+        vatIdForeign: 'ATU12345678',
+        company: 'Test Company',
+        location: 'Test City',
+        includeRaw: true,
+      });
+
+      expect(result.status).toBe('evatr-0000');
+      expect(result.raw).toBeDefined();
+      
+      const rawData = JSON.parse(result.raw!);
+      expect(rawData.headers).toEqual(mockResponse.headers);
+      expect(rawData.data).toEqual(mockResponse.data);
     });
   });
 
@@ -337,6 +428,52 @@ describe('EvatrClient', () => {
       expect(result.timestamp).toBeInstanceOf(Date);
       expect(result.validFrom).toBeInstanceOf(Date);
       expect(result.validTill).toBeInstanceOf(Date);
+    });
+
+    it('should include raw response data in extended response when includeRaw is true', async () => {
+      const mockResponse = {
+        data: {
+          anfrageZeitpunkt: '2025-08-03T20:30:00Z',
+          status: 'evatr-0000',
+          gueltigAb: '2025-01-01',
+          gueltigBis: '2025-12-31',
+        },
+        headers: {
+          'content-type': 'application/json',
+          'server': 'nginx/1.20.1',
+        },
+      };
+
+      mockAxiosInstance.post.mockResolvedValue(mockResponse);
+      
+      // Mock status message for extended response
+      mockedStatusMessages.getStatusMessage.mockReturnValue({
+        status: 'evatr-0000',
+        category: 'Result',
+        http: 200,
+        message: 'Valid',
+      });
+      mockedStatusMessages.isSuccessStatus.mockReturnValue(true);
+
+      // Test extended response with includeRaw
+      const result = await client.validateSimple({
+        vatIdOwn: 'DE123456789',
+        vatIdForeign: 'ATU12345678',
+        includeRaw: true,
+      }, true);
+
+      expect(result.vatIdOwn).toBe('DE123456789');
+      expect(result.vatIdForeign).toBe('ATU12345678');
+      expect(result.valid).toBe(true);
+      expect(result.message).toBe('Valid');
+      expect(result.timestamp).toBeInstanceOf(Date);
+      expect(result.validFrom).toBeInstanceOf(Date);
+      expect(result.validTill).toBeInstanceOf(Date);
+      expect(result.raw).toBeDefined();
+      
+      const rawData = JSON.parse(result.raw!);
+      expect(rawData.headers).toEqual(mockResponse.headers);
+      expect(rawData.data).toEqual(mockResponse.data);
     });
 
     it('should handle various VAT ID input formats and normalize them consistently', async () => {

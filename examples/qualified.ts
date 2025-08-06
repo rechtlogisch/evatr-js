@@ -13,11 +13,13 @@ async function qualifiedExample(): Promise<void> {
       location: 'musterort',
       street: 'Musterstrasse 22',
       zip: '12345',
+      // includeRaw: true,
     });
 
     console.log('Query time:', qualifiedResult.timestamp);
     console.log('Status:', qualifiedResult.status);
     console.log('Is success:', client.isSuccessStatus(qualifiedResult.status));
+    // console.log('Raw:', qualifiedResult.raw);
     
     if (qualifiedResult.company) {
       console.log('Company name result:', qualifiedResult.company);
