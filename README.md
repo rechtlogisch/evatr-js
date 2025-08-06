@@ -278,7 +278,7 @@ const qualifiedResult = await evatr.checkQualified({
 
 While the migration helper tries to maintain API compatibility, there are some unavoidable breaking changes:
 
-| Change | evatr | evatr-api) |
+| Change | evatr | evatr-api |
 |--------|---------------|----------------------------------|
 | Raw data parameter | `includeRawXml` | `includeRaw` |
 | Raw data response | `rawXml` (XML string) | `raw` (JSON string) |
