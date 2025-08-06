@@ -43,7 +43,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/rechtlogisch/evatr-js.git"
+    "url": "git+https://github.com/rechtlogisch/evatr-js.git"
   },
   "bugs": {
     "url": "https://github.com/rechtlogisch/evatr-js/issues"

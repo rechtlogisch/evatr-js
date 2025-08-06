@@ -10,6 +10,7 @@ build/
 
 # Environment variables
 .env
+.npmrc
 
 # IDE files
 .vscode/
