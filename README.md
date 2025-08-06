@@ -1,6 +1,6 @@
 ![Recht logisch eVatR banner image](rechtlogisch-evatr-api-banner.png)
 
-[![Tests](https://img.shields.io/github/actions/workflow/status/rechtlogisch/evatr-api/run-tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/rechtlogisch/evatr-api/actions/workflows/run-tests.yml)
+[![Tests](https://img.shields.io/github/actions/workflow/status/rechtlogisch/evatr-js/run-tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/rechtlogisch/evatr-js/actions/workflows/run-tests.yml)
 
 # evatr-api
 
