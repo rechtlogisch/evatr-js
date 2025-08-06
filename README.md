@@ -1,6 +1,8 @@
 ![Recht logisch eVatR banner image](rechtlogisch-evatr-api-banner.png)
 
 [![Tests](https://img.shields.io/github/actions/workflow/status/rechtlogisch/evatr-js/run-tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/rechtlogisch/evatr-js/actions/workflows/run-tests.yml)
+[![codecov](https://codecov.io/github/rechtlogisch/evatr-js/graph/badge.svg?token=BJ9JT1CR2S)](https://codecov.io/github/rechtlogisch/evatr-js)
+[![NPM Version](https://img.shields.io/npm/v/evatr-api)](https://www.npmjs.com/package/evatr-api)
 
 # evatr-api
 
