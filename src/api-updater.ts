@@ -268,8 +268,7 @@ export class EvatrApiUpdater {
 
       // Replace the STATUS_MESSAGES object
       const statusMessagesStr = JSON.stringify(statusMessagesObj, null, 2)
-        .replace(/"/g, "'")
-        .replace(/'/g, "'");
+        .replace(/"/g, "'");
 
       const newConstantsContent = constantsContent.replace(
         /export const STATUS_MESSAGES: Record<string, ApiStatusMessage> = \{[\s\S]*?\};/,
