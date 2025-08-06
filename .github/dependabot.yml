@@ -1,0 +1,41 @@
+version: 2
+updates:
+
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    labels:
+      - "dependencies"
+
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 10
+    commit-message:
+      prefix: "chore"
+      prefix-development: "chore"
+      include: "scope"
+    labels:
+      - "dependencies"
+    # Group updates for better management
+    groups:
+      production-dependencies:
+        patterns:
+          - "axios"
+        update-types:
+          - "minor"
+          - "patch"
+      development-dependencies:
+        patterns:
+          - "@types/*"
+          - "@typescript-eslint/*"
+          - "eslint*"
+          - "jest*"
+          - "prettier*"
+          - "typescript"
+          - "ts-*"
+        update-types:
+          - "minor"
+          - "patch"
