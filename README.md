@@ -268,7 +268,7 @@ const qualifiedResult = await evatr.checkQualified({
   ownVatNumber: 'DE123456789',
   validateVatNumber: 'ATU12345678',
   companyName: 'Musterhaus GmbH & Co KG',
-  street: 'Musterstrasse 22'
+  street: 'Musterstrasse 22',
   zip: '12345',
   city: 'musterort',
 });
