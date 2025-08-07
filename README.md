@@ -414,7 +414,7 @@ const qualifiedTestRequest = {
 
 ## Changelog
 
-Please see [CHANGELOG](CHANGELOG.md) for more information on what has changed recently.
+Please see [Release Notes](../../releases) for more information on what has changed recently.
 
 ## Contributing
 
