@@ -102,7 +102,7 @@ describe('EvatrApiUpdater', () => {
 
       const result = await EvatrApiUpdater.downloadApiDocs();
 
-      expect(mockedWriteFileSync).toHaveBeenCalledTimes(2);
+      expect(mockedWriteFileSync).toHaveBeenCalledTimes(1);
       expect(result).toContain('api-docs-v:1.2.3.6-FINAL.726-2025-08-03.json');
     });
   });
