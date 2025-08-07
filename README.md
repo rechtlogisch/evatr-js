@@ -399,7 +399,7 @@ The library includes test VAT-IDs and information that can be used for testing. 
 ```typescript
 const testRequest = {
   anfragendeUstid: 'DE123456789',
-  angefragteUstid: 'ATU12345678'
+  angefragteUstid: 'ATU12345678',
 };
 
 const qualifiedTestRequest = {
@@ -408,7 +408,7 @@ const qualifiedTestRequest = {
   firmenname: 'Musterhaus GmbH & Co KG',
   strasse: 'Musterstrasse 22',
   plz: '12345',
-  ort: 'musterort'
+  ort: 'musterort',
 };
 ```
 
