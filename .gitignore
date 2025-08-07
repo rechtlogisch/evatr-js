@@ -53,5 +53,3 @@ jest_*
 
 # Yarn Integrity file
 .yarn-integrity
-
-/docs/*

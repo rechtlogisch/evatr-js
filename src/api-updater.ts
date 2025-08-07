@@ -102,11 +102,9 @@ export class EvatrApiUpdater {
       
       writeFileSync(filepath, JSON.stringify(apiDocs, null, 2));
       
-      // Also update the main api-docs.json file
-      const mainFilepath = join(this.DOCS_DIR, 'api-docs.json');
-      writeFileSync(mainFilepath, JSON.stringify(apiDocs, null, 2));
-      
-      console.log(`✅ API documentation saved to: ${filename}`);
+      console.log(`💾 API documentation saved to: ${filename}`);
+      console.log(`🚧 Please review api-docs manually for any relevant changes.`);
+
       return filepath;
     } catch (error) {
       console.error('Error downloading API docs:', error);
@@ -293,10 +291,10 @@ export class EvatrApiUpdater {
       // Check API docs
       const apiDocsResult = await this.checkApiDocsUpdate();
       if (apiDocsResult.hasUpdate) {
-        console.log(`📄 API Docs update available: ${apiDocsResult.currentVersion} → ${apiDocsResult.latestVersion}`);
+        console.log(`🔄 API docs update available: ${apiDocsResult.currentVersion} → ${apiDocsResult.latestVersion}`);
         await this.downloadApiDocs();
       } else {
-        console.log('📄 API Docs are up to date');
+        console.log('📄 API docs are up to date');
       }
 
       // Check status messages

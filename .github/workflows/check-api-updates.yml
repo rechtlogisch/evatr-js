@@ -1,0 +1,102 @@
+name: Check API Updates
+
+on:
+  schedule:
+    # Run every day at 8:00 AM UTC
+    - cron: '0 8 * * *'
+  workflow_dispatch: # Allow manual triggering
+
+jobs:
+  check-api-updates:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22.x'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Cache API files and checksums
+        uses: actions/cache@v4
+        id: api-cache
+        with:
+          path: |
+            api-docs.json
+            statusmeldungen.json
+            checksums.txt
+          key: api-cache-v1
+          restore-keys: api-cache-v1
+
+      - name: Download and check API files
+        id: check-changes
+        run: |
+          echo "Downloading API files..."
+          
+          # Download API docs
+          curl -s -o api-docs-new.json https://api.evatr.vies.bzst.de/api-docs
+          
+          # Download status messages
+          curl -s -o statusmeldungen-new.json https://api.evatr.vies.bzst.de/v1/info/statusmeldungen
+          
+          # Calculate new checksums
+          api_checksum=$(sha256sum api-docs-new.json | cut -d' ' -f1)
+          status_checksum=$(sha256sum statusmeldungen-new.json | cut -d' ' -f1)
+          
+          echo "api-docs:$api_checksum" > checksums-new.txt
+          echo "statusmeldungen:$status_checksum" >> checksums-new.txt
+          
+          echo "New checksums:"
+          cat checksums-new.txt
+          
+          # Compare with previous checksums
+          if [ -f "checksums.txt" ]; then
+            echo "Previous checksums:"
+            cat checksums.txt
+            
+            if cmp -s checksums.txt checksums-new.txt; then
+              echo "changes_detected=false" >> $GITHUB_OUTPUT
+              echo "✅ No changes detected"
+            else
+              echo "changes_detected=true" >> $GITHUB_OUTPUT
+              echo "🔄 Changes detected!"
+              
+              # Update cached files
+              mv api-docs-new.json api-docs.json
+              mv statusmeldungen-new.json statusmeldungen.json
+              mv checksums-new.txt checksums.txt
+            fi
+          else
+            echo "changes_detected=true" >> $GITHUB_OUTPUT
+            echo "🎆 First run - treating as changes detected"
+            
+            # Save new files
+            mv api-docs-new.json api-docs.json
+            mv statusmeldungen-new.json statusmeldungen.json
+            mv checksums-new.txt checksums.txt
+          fi
+
+      - name: Run API update if changes detected
+        if: steps.check-changes.outputs.changes_detected == 'true'
+        run: |
+          echo "Running npm run update:api due to detected changes..."
+          npm run update:api check
+
+      - name: Fail workflow if changes detected
+        if: steps.check-changes.outputs.changes_detected == 'true'
+        run: |
+          echo "❌ API changes detected! Failing workflow for notification."
+          echo "📄 Check the logs above for details about what changed."
+          echo "🔧 The API has been updated - please review the changes."
+          exit 1
+
+      - name: Success notification
+        if: steps.check-changes.outputs.changes_detected == 'false'
+        run: |
+          echo "✅ No API changes detected. Everything is up to date!"
