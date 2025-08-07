@@ -88,6 +88,16 @@ jobs:
           echo "Running npm run update:api due to detected changes..."
           npm run update:api check
 
+      - name: Save cache
+        if: steps.check-changes.outputs.changes_detected == 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: |
+            api-docs.json
+            statusmeldungen.json
+            checksums.txt
+          key: api-cache-v1
+
       - name: Fail workflow if changes detected
         if: steps.check-changes.outputs.changes_detected == 'true'
         run: |
