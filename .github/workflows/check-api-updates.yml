@@ -25,61 +25,67 @@ jobs:
 
       - name: Cache API files and checksums
         uses: actions/cache@v4
-        id: api-cache
+        id: docs-cache
         with:
           path: |
-            api-docs.json
-            statusmeldungen.json
-            checksums.txt
-          key: api-cache-v1
-          restore-keys: api-cache-v1
+            docs/api-docs.json
+            docs/statusmeldungen.json
+            docs/checksums.txt
+          key: docs-cache-v2
+          restore-keys: docs-cache-v2
 
       - name: Download and check API files
         id: check-changes
         run: |
+          set -euo pipefail
+          DIR="docs"
+          mkdir -p "$DIR"
+
           echo "Downloading API files..."
           
           # Download API docs
-          curl -s -o api-docs-new.json https://api.evatr.vies.bzst.de/api-docs
+          curl -s -o "$DIR/api-docs.new.json" https://api.evatr.vies.bzst.de/api-docs
           
           # Download status messages
-          curl -s -o statusmeldungen-new.json https://api.evatr.vies.bzst.de/v1/info/statusmeldungen
+          curl -s -o "$DIR/statusmeldungen.new.json" https://api.evatr.vies.bzst.de/v1/info/statusmeldungen
           
           # Calculate new checksums
-          api_checksum=$(sha256sum api-docs-new.json | cut -d' ' -f1)
-          status_checksum=$(sha256sum statusmeldungen-new.json | cut -d' ' -f1)
+          api_checksum=$(sha256sum "$DIR/api-docs.new.json" | cut -d' ' -f1)
+          status_checksum=$(sha256sum "$DIR/statusmeldungen.new.json" | cut -d' ' -f1)
           
-          echo "api-docs:$api_checksum" > checksums-new.txt
-          echo "statusmeldungen:$status_checksum" >> checksums-new.txt
+          echo "api-docs:$api_checksum" > "$DIR/checksums.new.txt"
+          echo "statusmeldungen:$status_checksum" >> "$DIR/checksums.new.txt"
           
           echo "New checksums:"
-          cat checksums-new.txt
+          cat "$DIR/checksums.new.txt"
           
           # Compare with previous checksums
-          if [ -f "checksums.txt" ]; then
-            echo "Previous checksums:"
-            cat checksums.txt
-            
-            if cmp -s checksums.txt checksums-new.txt; then
-              echo "changes_detected=false" >> $GITHUB_OUTPUT
-              echo "✅ No changes detected"
-            else
-              echo "changes_detected=true" >> $GITHUB_OUTPUT
-              echo "🔄 Changes detected!"
-              
-              # Update cached files
-              mv api-docs-new.json api-docs.json
-              mv statusmeldungen-new.json statusmeldungen.json
-              mv checksums-new.txt checksums.txt
-            fi
+          if [ -f "$DIR/checksums.txt" ]; then
+          echo "Previous checksums:"
+          cat "$DIR/checksums.txt"
+          
+          if cmp -s "$DIR/checksums.txt" "$DIR/checksums.new.txt"; then
+            echo "changes_detected=false" >> $GITHUB_OUTPUT
+            echo "✅ No changes detected"
+            # Cleanup temporary downloads
+            rm -f "$DIR/api-docs.new.json" "$DIR/statusmeldungen.new.json" "$DIR/checksums.new.txt"
           else
             echo "changes_detected=true" >> $GITHUB_OUTPUT
-            echo "🎆 First run - treating as changes detected"
+            echo "🔄 Changes detected!"
             
-            # Save new files
-            mv api-docs-new.json api-docs.json
-            mv statusmeldungen-new.json statusmeldungen.json
-            mv checksums-new.txt checksums.txt
+            # Update cached files
+            mv "$DIR/api-docs.new.json" "$DIR/api-docs.json"
+            mv "$DIR/statusmeldungen.new.json" "$DIR/statusmeldungen.json"
+            mv "$DIR/checksums.new.txt" "$DIR/checksums.txt"
+          fi
+          else
+          echo "changes_detected=true" >> $GITHUB_OUTPUT
+          echo "🎆 First run - treating as changes detected"
+          
+          # Save new files
+          mv "$DIR/api-docs.new.json" "$DIR/api-docs.json"
+          mv "$DIR/statusmeldungen.new.json" "$DIR/statusmeldungen.json"
+          mv "$DIR/checksums.new.txt" "$DIR/checksums.txt"
           fi
 
       - name: Run API update if changes detected
@@ -93,10 +99,10 @@ jobs:
         uses: actions/cache/save@v4
         with:
           path: |
-            api-docs.json
-            statusmeldungen.json
-            checksums.txt
-          key: api-cache-v1
+            docs/api-docs.json
+            docs/statusmeldungen.json
+            docs/checksums.txt
+          key: docs-cache-v2
 
       - name: Fail workflow if changes detected
         if: steps.check-changes.outputs.changes_detected == 'true'
