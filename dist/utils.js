@@ -89,8 +89,8 @@ class EvatrUtils {
      */
     static getTestVatIds() {
         return {
-            'DE': 'DE123456789',
-            'AT': 'ATU12345678',
+            DE: 'DE123456789',
+            AT: 'ATU12345678',
         };
     }
     /**
@@ -112,7 +112,6 @@ class EvatrUtils {
      * Calculate check digit for German VAT-ID (for validation purposes)
      * @param vatIdNumber Numeric part of German VAT-ID (without DE prefix)
      * @returns number Check digit
-     * @TODO fix
      */
     static calculateGermanVatIdCheckDigit(vatIdNumber) {
         if (vatIdNumber.length !== 9) {

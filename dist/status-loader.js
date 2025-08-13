@@ -26,7 +26,7 @@ class StatusMessages {
     static getAndCacheStatusMessages() {
         const now = Date.now();
         // Return cached messages if still valid
-        if (this.cachedMessages && (now - this.lastLoadTime) < this.CACHE_TTL) {
+        if (this.cachedMessages && now - this.lastLoadTime < this.CACHE_TTL) {
             return this.cachedMessages;
         }
         // Try to load from file first
@@ -131,14 +131,14 @@ class StatusMessages {
      */
     static getStatusMessagesByCategory(category) {
         const messages = this.getStatusMessages();
-        return Object.values(messages).filter(msg => msg.category === category);
+        return Object.values(messages).filter((msg) => msg.category === category);
     }
     /**
      * Get status messages by HTTP code
      */
     static getStatusMessagesByHttp(http) {
         const messages = this.getStatusMessages();
-        return Object.values(messages).filter(msg => msg.http === http);
+        return Object.values(messages).filter((msg) => msg.http === http);
     }
     /**
      * Check if status code indicates success
@@ -179,7 +179,7 @@ class StatusMessages {
             total: messageArray.length,
             byCategory,
             byHttp,
-            source: this.cachedMessages === constants_1.STATUS_MESSAGES ? 'constants' : 'file'
+            source: this.cachedMessages === constants_1.STATUS_MESSAGES ? 'constants' : 'file',
         };
     }
 }

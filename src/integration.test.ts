@@ -28,11 +28,11 @@ describe('Integration Tests', () => {
       // Test German VAT-ID
       expect(EvatrClient.checkVatIdSyntax('DE123456789')).toBe(true);
       expect(EvatrClient.checkVatIdSyntax('DE12345678')).toBe(false); // Wrong length
-      
+
       // Test Austrian VAT-ID
       expect(EvatrClient.checkVatIdSyntax('ATU12345678')).toBe(true);
       expect(EvatrClient.checkVatIdSyntax('AT12345678')).toBe(false); // Missing 'U'
-      
+
       // Test invalid formats
       expect(EvatrClient.checkVatIdSyntax('INVALID')).toBe(false);
       expect(EvatrClient.checkVatIdSyntax('123456789')).toBe(false);

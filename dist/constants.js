@@ -21,34 +21,34 @@ exports.ENDPOINTS = {
  * VAT-ID syntax validation rules
  */
 exports.VATID_PATTERNS = {
-    'AT': /^ATU\d{8}$/, // ATU + 8 digits
-    'BE': /^BE[01]\d{9}$/, // BE + 0 or 1 + 9 digits
-    'BG': /^BG\d{9,10}$/, // BG + 9-10 digits
-    'CY': /^CY\d{8}[A-Z]$/, // CY + 8 digits + letter
-    'CZ': /^CZ\d{8,10}$/, // CZ + 8-10 digits
-    'DE': /^DE\d{9}$/, // DE + 9 digits
-    'DK': /^DK\d{8}$/, // DK + 8 digits
-    'EE': /^EE\d{9}$/, // EE + 9 digits
-    'ES': /^ES[A-Z]\d{7}[A-Z0-9]$/, // ES + letter + 7 digits + letter or digit
-    'FI': /^FI\d{8}$/, // FI + 8 digits
-    'FR': /^FR[A-Z0-9]{2}\d{9}$/, // FR + 2 chars + 9 digits
-    'GR': /^GR\d{9}$/, // GR + 9 digits
-    'HR': /^HR\d{11}$/, // HR + 11 digits
-    'HU': /^HU\d{8}$/, // HU + 8 digits
-    'IE': /^IE\d[A-Z0-9]\d{5}[A-Z]$|^\d{7}[A-Z]{1,2}$/, // IE + various patterns
-    'IT': /^IT\d{11}$/, // IT + 11 digits
-    'LT': /^LT\d{9}$|^\d{12}$/, // LT + 9 or 12 digits
-    'LU': /^LU\d{8}$/, // LU + 8 digits
-    'LV': /^LV\d{11}$/, // LV + 11 digits
-    'MT': /^MT\d{8}$/, // MT + 8 digits
-    'NL': /^NL\d{9}B\d{2}$/, // NL + 9 digits + B + 2 digits
-    'PL': /^PL\d{10}$/, // PL + 10 digits
-    'PT': /^PT\d{9}$/, // PT + 9 digits
-    'RO': /^RO\d{2,10}$/, // RO + 2-10 digits
-    'SE': /^SE\d{10}01$/, // SE + 10 digits + 01
-    'SI': /^SI\d{8}$/, // SI + 8 digits
-    'SK': /^SK\d{10}$/, // SK + 10 digits
-    'XI': /^XI\d{9}$|^\d{12}$/, // XI + 9 or 12 digits
+    AT: /^ATU\d{8}$/, // ATU + 8 digits
+    BE: /^BE[01]\d{9}$/, // BE + 0 or 1 + 9 digits
+    BG: /^BG\d{9,10}$/, // BG + 9-10 digits
+    CY: /^CY\d{8}[A-Z]$/, // CY + 8 digits + letter
+    CZ: /^CZ\d{8,10}$/, // CZ + 8-10 digits
+    DE: /^DE\d{9}$/, // DE + 9 digits
+    DK: /^DK\d{8}$/, // DK + 8 digits
+    EE: /^EE\d{9}$/, // EE + 9 digits
+    ES: /^ES[A-Z]\d{7}[A-Z0-9]$/, // ES + letter + 7 digits + letter or digit
+    FI: /^FI\d{8}$/, // FI + 8 digits
+    FR: /^FR[A-Z0-9]{2}\d{9}$/, // FR + 2 chars + 9 digits
+    GR: /^GR\d{9}$/, // GR + 9 digits
+    HR: /^HR\d{11}$/, // HR + 11 digits
+    HU: /^HU\d{8}$/, // HU + 8 digits
+    IE: /^IE\d[A-Z0-9]\d{5}[A-Z]$|^\d{7}[A-Z]{1,2}$/, // IE + various patterns
+    IT: /^IT\d{11}$/, // IT + 11 digits
+    LT: /^LT\d{9}$|^\d{12}$/, // LT + 9 or 12 digits
+    LU: /^LU\d{8}$/, // LU + 8 digits
+    LV: /^LV\d{11}$/, // LV + 11 digits
+    MT: /^MT\d{8}$/, // MT + 8 digits
+    NL: /^NL\d{9}B\d{2}$/, // NL + 9 digits + B + 2 digits
+    PL: /^PL\d{10}$/, // PL + 10 digits
+    PT: /^PT\d{9}$/, // PT + 9 digits
+    RO: /^RO\d{2,10}$/, // RO + 2-10 digits
+    SE: /^SE\d{10}01$/, // SE + 10 digits + 01
+    SI: /^SI\d{8}$/, // SI + 8 digits
+    SK: /^SK\d{10}$/, // SK + 10 digits
+    XI: /^XI\d{9}$|^\d{12}$/, // XI + 9 or 12 digits
 };
 /**
  * Status messages from the eVatR API
@@ -125,7 +125,7 @@ exports.STATUS_MESSAGES = {
         category: 'Error',
         http: 400,
         field: 'angefragteUstid',
-        message: 'Die angefrage USt-IdNr. ist syntaktisch falsch. Sie passt nicht in das Erzeugungsschema.',
+        message: 'Die angefragte USt-IdNr. ist syntaktisch falsch. Sie passt nicht in das Erzeugungsschema.',
     },
     'evatr-0013': {
         status: 'evatr-0013',
@@ -236,33 +236,33 @@ exports.QUALIFIED_RESULT_CODES = {
  * Country code to country name mapping for EU member states
  */
 exports.EU_MEMBER_STATES = {
-    'AT': 'Austria',
-    'BE': 'Belgium',
-    'BG': 'Bulgaria',
-    'CY': 'Cyprus',
-    'CZ': 'Czech Republic',
-    'DE': 'Germany',
-    'DK': 'Denmark',
-    'EE': 'Estonia',
-    'ES': 'Spain',
-    'FI': 'Finland',
-    'FR': 'France',
-    'GR': 'Greece',
-    'HR': 'Croatia',
-    'HU': 'Hungary',
-    'IE': 'Ireland',
-    'IT': 'Italy',
-    'LT': 'Lithuania',
-    'LU': 'Luxembourg',
-    'LV': 'Latvia',
-    'MT': 'Malta',
-    'NL': 'Netherlands',
-    'PL': 'Poland',
-    'PT': 'Portugal',
-    'RO': 'Romania',
-    'SE': 'Sweden',
-    'SI': 'Slovenia',
-    'SK': 'Slovakia',
-    'XI': 'Northern Ireland',
+    AT: 'Austria',
+    BE: 'Belgium',
+    BG: 'Bulgaria',
+    CY: 'Cyprus',
+    CZ: 'Czech Republic',
+    DE: 'Germany',
+    DK: 'Denmark',
+    EE: 'Estonia',
+    ES: 'Spain',
+    FI: 'Finland',
+    FR: 'France',
+    GR: 'Greece',
+    HR: 'Croatia',
+    HU: 'Hungary',
+    IE: 'Ireland',
+    IT: 'Italy',
+    LT: 'Lithuania',
+    LU: 'Luxembourg',
+    LV: 'Latvia',
+    MT: 'Malta',
+    NL: 'Netherlands',
+    PL: 'Poland',
+    PT: 'Portugal',
+    RO: 'Romania',
+    SE: 'Sweden',
+    SI: 'Slovenia',
+    SK: 'Slovakia',
+    XI: 'Northern Ireland',
 };
 //# sourceMappingURL=constants.js.map

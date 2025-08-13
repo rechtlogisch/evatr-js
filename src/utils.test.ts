@@ -93,10 +93,14 @@ describe('EvatrUtils', () => {
     it('should reject German VAT-ID with wrong length', () => {
       // Test with wrong length
       const vatIdNumber = '12345678'; // Too short
-      expect(() => EvatrUtils.calculateGermanVatIdCheckDigit(vatIdNumber)).toThrow('German VAT-ID number must contain exactly 9 digits after letters DE');
-      
+      expect(() => EvatrUtils.calculateGermanVatIdCheckDigit(vatIdNumber)).toThrow(
+        'German VAT-ID number must contain exactly 9 digits after letters DE'
+      );
+
       const vatIdLong = '1234567890'; // Too long
-      expect(() => EvatrUtils.calculateGermanVatIdCheckDigit(vatIdLong)).toThrow('German VAT-ID number must contain exactly 9 digits after letters DE');
+      expect(() => EvatrUtils.calculateGermanVatIdCheckDigit(vatIdLong)).toThrow(
+        'German VAT-ID number must contain exactly 9 digits after letters DE'
+      );
     });
   });
 
@@ -107,9 +111,37 @@ describe('EvatrUtils', () => {
     });
 
     it('should validate VAT-IDs for all supported EU countries', () => {
-      const supportedCountries = ['DE', 'AT', 'BE', 'BG', 'CY', 'CZ', 'DK', 'EE', 'ES', 'FI', 'FR', 'GR', 'HR', 'HU', 'IE', 'IT', 'LT', 'LU', 'LV', 'MT', 'NL', 'PL', 'PT', 'RO', 'SE', 'SI', 'SK'];
-      
-      supportedCountries.forEach(country => {
+      const supportedCountries = [
+        'DE',
+        'AT',
+        'BE',
+        'BG',
+        'CY',
+        'CZ',
+        'DK',
+        'EE',
+        'ES',
+        'FI',
+        'FR',
+        'GR',
+        'HR',
+        'HU',
+        'IE',
+        'IT',
+        'LT',
+        'LU',
+        'LV',
+        'MT',
+        'NL',
+        'PL',
+        'PT',
+        'RO',
+        'SE',
+        'SI',
+        'SK',
+      ];
+
+      supportedCountries.forEach((country) => {
         const testVatIds = EvatrUtils.getTestVatIds();
         const countryVatId = testVatIds[country];
         if (countryVatId) {
@@ -120,16 +152,9 @@ describe('EvatrUtils', () => {
     });
 
     it('should handle malformed VAT-IDs gracefully', () => {
-      const malformedVatIds = [
-        '',
-        'DE',
-        'INVALID',
-        '123456789',
-        'DE12345678A',
-        'DE-123-456-789',
-      ];
+      const malformedVatIds = ['', 'DE', 'INVALID', '123456789', 'DE12345678A', 'DE-123-456-789'];
 
-      malformedVatIds.forEach(vatId => {
+      malformedVatIds.forEach((vatId) => {
         expect(() => {
           EvatrUtils.checkVatIdSyntaxForCountry(vatId, 'DE');
         }).not.toThrow();

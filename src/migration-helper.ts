@@ -1,9 +1,9 @@
 /**
  * Migration helper for backward compatibility with the evatr library
  * The XML-RPC eVatR is planned to be sunset on 2025-11-30
- * 
+ *
  * Provides a similar API as https://github.com/qqilihq/evatr
- * 
+ *
  * Some of the breaking changes:
  * - request
  *    - `includeRawXml` is here `includeRaw` (as server response is JSON)
@@ -20,7 +20,7 @@ import { StatusMessages } from './status-loader';
 /**
  * Mapping from new eVatR status codes to legacy error codes for backward compatibility
  * Based on the XML-RPC error codes
- * 
+ *
  * Some error codes are vague or not possible to map:
  * - 201 // Die angefragte USt-IdNr. ist ungültig.
  * - 205 // Ihre Anfrage kann derzeit durch den angefragten EU-Mitgliedstaat oder aus anderen Gründen nicht beantwortet werden. Bitte versuchen Sie es später noch einmal. Bei wiederholten Problemen wenden Sie sich bitte an das Bundeszentralamt für Steuern - Dienstsitz Saarlouis.
@@ -135,12 +135,16 @@ export class EvatrMigrationHelper {
       const statusMessage = StatusMessages.getStatusMessage(response.status);
       // Parse timestamp to extract date and time
       const timestamp = new Date(response.timestamp);
-      const date = timestamp.toLocaleDateString('de-DE', { year: 'numeric', month: '2-digit', day: '2-digit' }); // DD.MM.YYY
+      const date = timestamp.toLocaleDateString('de-DE', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+      }); // DD.MM.YYY
       const time = timestamp.toTimeString().split(' ')[0]; // HH:MM:SS
 
       // Map status to legacy error code
       const errorCode = this.mapStatusToErrorCode(response.status);
-      
+
       const result: ISimpleResult = {
         date,
         time,
@@ -160,14 +164,18 @@ export class EvatrMigrationHelper {
       }
 
       return result;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       // Map API errors to the expected format
       const errorCode = error.http || 500;
       const timestamp = new Date();
-      
+
       return {
-        date: timestamp.toLocaleDateString('de-DE', { year: 'numeric', month: '2-digit', day: '2-digit' }), // DD.MM.YYY
+        date: timestamp.toLocaleDateString('de-DE', {
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit',
+        }), // DD.MM.YYY
         time: timestamp.toTimeString().split(' ')[0],
         errorCode,
         errorDescription: error.message,
@@ -196,10 +204,14 @@ export class EvatrMigrationHelper {
 
       const statusMessage = StatusMessages.getStatusMessage(response.status);
       const errorCode = this.mapStatusToErrorCode(response.status);
-      
+
       // Parse timestamp to extract date and time
       const timestamp = new Date(response.timestamp);
-      const date = timestamp.toLocaleDateString('de-DE', { year: 'numeric', month: '2-digit', day: '2-digit' }); // DD.MM.YYY
+      const date = timestamp.toLocaleDateString('de-DE', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+      }); // DD.MM.YYY
       const time = timestamp.toTimeString().split(' ')[0]; // HH:MM:SS
 
       const result: IQualifiedResult = {
@@ -233,14 +245,18 @@ export class EvatrMigrationHelper {
       }
 
       return result;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       // Map API errors to the expected format
       const errorCode = error.http || 500;
       const timestamp = new Date();
-      
+
       return {
-        date: timestamp.toLocaleDateString('de-DE', { year: 'numeric', month: '2-digit', day: '2-digit' }), // DD.MM.YYY
+        date: timestamp.toLocaleDateString('de-DE', {
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit',
+        }), // DD.MM.YYY
         time: timestamp.toTimeString().split(' ')[0],
         errorCode,
         errorDescription: error.message,

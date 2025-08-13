@@ -8,7 +8,7 @@ import {
   ApiRequest,
   ApiResponse,
   ApiStatusMessage,
-  EUMemberState,
+  Availability,
   EvatrApiError,
   EvatrClientConfig,
   ExtendedResponse,
@@ -28,16 +28,13 @@ export class EvatrClient {
   private readonly httpClient: AxiosInstance;
 
   constructor(config: EvatrClientConfig = {}) {
-    const {
-      timeout = 30000,
-      headers = {},
-    } = config;
+    const { timeout = 30000, headers = {} } = config;
 
     this.httpClient = axios.create({
       timeout,
       headers: {
         'Content-Type': 'application/json',
-        'Accept': 'application/json',
+        Accept: 'application/json',
         ...headers,
       },
     });
@@ -67,7 +64,10 @@ export class EvatrClient {
   async validateSimple(request: SimpleRequest): Promise<Response>;
   async validateSimple(request: SimpleRequest, extended: true): Promise<ExtendedResponse>;
   async validateSimple(request: SimpleRequest, extended: false): Promise<Response>;
-  async validateSimple(request: SimpleRequest, extended?: boolean): Promise<Response | ExtendedResponse> {
+  async validateSimple(
+    request: SimpleRequest,
+    extended?: boolean
+  ): Promise<Response | ExtendedResponse> {
     const payload: Request = {
       vatIdOwn: request.vatIdOwn,
       vatIdForeign: request.vatIdForeign,
@@ -86,7 +86,10 @@ export class EvatrClient {
   async validateQualified(request: QualifiedRequest): Promise<Response>;
   async validateQualified(request: QualifiedRequest, extended: true): Promise<ExtendedResponse>;
   async validateQualified(request: QualifiedRequest, extended: false): Promise<Response>;
-  async validateQualified(request: QualifiedRequest, extended?: boolean): Promise<Response | ExtendedResponse> {
+  async validateQualified(
+    request: QualifiedRequest,
+    extended?: boolean
+  ): Promise<Response | ExtendedResponse> {
     const payload: Request = {
       vatIdOwn: request.vatIdOwn,
       vatIdForeign: request.vatIdForeign,
@@ -122,9 +125,16 @@ export class EvatrClient {
       const response: AxiosResponse<ApiStatusMessage[]> = await this.httpClient.get(
         ENDPOINTS.STATUS_MESSAGES
       );
-      return response.data.map(apiMsg => ({
+      return response.data.map((apiMsg) => ({
         status: apiMsg.status,
-        category: apiMsg.kategorie === 'Ergebnis' ? 'Result' : apiMsg.kategorie === 'Fehler' ? 'Error' : apiMsg.kategorie === 'Hinweis' ? 'Hint' : undefined,
+        category:
+          apiMsg.kategorie === 'Ergebnis'
+            ? 'Result'
+            : apiMsg.kategorie === 'Fehler'
+              ? 'Error'
+              : apiMsg.kategorie === 'Hinweis'
+                ? 'Hint'
+                : undefined,
         http: apiMsg.httpcode,
         message: apiMsg.meldung,
         field: apiMsg.feld,
@@ -135,19 +145,20 @@ export class EvatrClient {
   }
 
   /**
-   * Get EU member states and their availability
-   * @returns Promise<ApiEUMemberState[]>
+   * Get availability of VIES per EU member state.
+   * Returns a map keyed by ISO alpha-2 country code (e.g., "DE") with boolean availability.
    */
-  async getEUMemberStates(): Promise<EUMemberState[]> {
+  async getAvailability(): Promise<Availability> {
     try {
       const response: AxiosResponse<ApiEUMemberState[]> = await this.httpClient.get(
         ENDPOINTS.EU_MEMBER_STATES
       );
 
-      return response.data.map(apiState => ({
-        code: apiState.alpha2,
-        available: apiState.verfuegbar,
-      })) as EUMemberState[];
+      const availability: Availability = {};
+      for (const apiState of response.data) {
+        availability[apiState.alpha2] = apiState.verfuegbar;
+      }
+      return availability;
     } catch (error) {
       throw this.handleError(error);
     }
@@ -198,21 +209,21 @@ export class EvatrClient {
     if (!vatId || typeof vatId !== 'string') {
       return false;
     }
-    
+
     const cleanVatId = this.normalizeVatId(vatId);
-    
+
     // Must start with exactly 2 letters (country code)
     if (!/^[A-Z]{2}/.test(cleanVatId)) {
       return false;
     }
-    
+
     const countryCode = cleanVatId.substring(0, 2);
-    
+
     const pattern = VATID_PATTERNS[countryCode];
     if (!pattern) {
       return false;
     }
-    
+
     return pattern.test(cleanVatId);
   }
 
@@ -251,8 +262,13 @@ export class EvatrClient {
   /**
    * Maps API response to parameters
    */
-  private mapFromApiResponse(response: ApiResponse, vatIdOwn: string, vatIdForeign: string): Response {
+  private mapFromApiResponse(
+    response: ApiResponse,
+    vatIdOwn: string,
+    vatIdForeign: string
+  ): Response {
     return {
+      id: response.id,
       timestamp: response.anfrageZeitpunkt,
       status: response.status,
       vatIdOwn,
@@ -271,8 +287,9 @@ export class EvatrClient {
    */
   private mapToExtendedResponse(response: Response): ExtendedResponse {
     const statusMessage = this.getStatusMessage(response.status);
-    
+
     return {
+      id: response.id,
       timestamp: new Date(response.timestamp),
       valid: this.isSuccessStatus(response.status),
       status: response.status,
@@ -292,7 +309,10 @@ export class EvatrClient {
   /**
    * Internal method to perform the actual validation request
    */
-  private async performValidation(request: Request, extended?: boolean): Promise<Response | ExtendedResponse> {
+  private async performValidation(
+    request: Request,
+    extended?: boolean
+  ): Promise<Response | ExtendedResponse> {
     try {
       // Validate input
       if (!request.vatIdOwn || !request.vatIdForeign) {
@@ -324,21 +344,25 @@ export class EvatrClient {
       );
 
       // Map API response to English property names
-      const basicResponse = this.mapFromApiResponse(response.data, formattedRequest.vatIdOwn, formattedRequest.vatIdForeign);
-      
+      const basicResponse = this.mapFromApiResponse(
+        response.data,
+        formattedRequest.vatIdOwn,
+        formattedRequest.vatIdForeign
+      );
+
       // Include raw response data if requested
       if (request.includeRaw === true) {
         const rawData = {
           headers: response.headers,
-          data: response.data
+          data: response.data,
         };
         basicResponse.raw = JSON.stringify(rawData);
       }
-      
+
       if (extended) {
         return this.mapToExtendedResponse(basicResponse);
       }
-      
+
       return basicResponse;
     } catch (error) {
       throw this.handleError(error);
@@ -354,11 +378,9 @@ export class EvatrClient {
       return error;
     }
 
-    const evatrError: EvatrApiError = new Error(
-      error.message || 'Unknown error occurred'
-    );
+    const evatrError: EvatrApiError = new Error(error.message || 'Unknown error occurred');
     evatrError.name = 'EvatrApiError';
-    
+
     if (error.response) {
       evatrError.http = error.response.status;
       evatrError.status = error.response.data?.status;

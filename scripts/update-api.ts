@@ -51,13 +51,13 @@ async function main(): Promise<void> {
 eVatR API Update Tool
 
 Usage:
-  npm run update-api check                    - Check for all updates
-  npm run update-api api-docs                 - Check and download API docs
-  npm run update-api status-messages          - Check and download status messages
-  npm run update-api update-constants <file>  - Update constants.ts from file
+  npm run update:api check                    - Check for all updates
+  npm run update:api api-docs                 - Check and download API docs
+  npm run update:api status-messages          - Check and download status messages
+  npm run update:api update-constants <file>  - Update constants.ts from file
 
 Examples:
-  npm run update-api update-constants ./docs/statusmeldungen-2025-08-03.json
+  npm run update:api update-constants ./docs/statusmeldungen-${new Date().toISOString().substring(0, 10)}.json
         `);
         break;
     }

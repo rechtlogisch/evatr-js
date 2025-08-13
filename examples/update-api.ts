@@ -26,7 +26,7 @@ async function demonstrateUpdateCheck(): Promise<void> {
       console.log(`✨ API Docs update available!`);
       console.log(`   Current: ${apiResult.currentVersion || 'Not found'}`);
       console.log(`   Latest: ${apiResult.latestVersion}`);
-      console.log('   Run: npm run update-api api-docs');
+      console.log('   Run: npm run update:api api-docs');
     } else {
       console.log('✅ API Documentation is up to date');
     }
@@ -44,7 +44,7 @@ async function demonstrateUpdateCheck(): Promise<void> {
       // Show differences
       EvatrApiUpdater.printStatusMessageDiff(statusResult.diff);
       
-      console.log('\n   Run: npm run update-api status-messages');
+      console.log('\n   Run: npm run update:api status-messages');
     } else {
       console.log('✅ Status Messages are up to date');
     }

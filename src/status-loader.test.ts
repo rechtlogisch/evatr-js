@@ -24,14 +24,16 @@ describe('StatusMessages', () => {
       category: 'Error',
       http: 400,
       field: 'anfragendeUstid', // API field name
-      message: 'Die anfragende DE Ust-IdNr. ist syntaktisch falsch. Sie passt nicht in das deutsche Erzeugungsschema.',
+      message:
+        'Die anfragende DE Ust-IdNr. ist syntaktisch falsch. Sie passt nicht in das deutsche Erzeugungsschema.',
     },
     {
       status: 'evatr-2002',
       category: 'Hint',
       http: 200,
       field: 'angefragteUstid', // API field name
-      message: 'Die angefragte USt-IdNr. ist zum Anfragezeitpunkt nicht gültig. Sie ist erst gültig ab dem Datum im Feld gueltigAb.',
+      message:
+        'Die angefragte USt-IdNr. ist zum Anfragezeitpunkt nicht gültig. Sie ist erst gültig ab dem Datum im Feld gueltigAb.',
     },
   ];
 
@@ -270,40 +272,31 @@ describe('StatusMessages', () => {
     //     { status: 'evatr-0000', category: 'Result', http: 200, message: 'Valid' },
     //     { status: 'evatr-0001', category: 'Error', http: 400, message: 'Invalid' },
     //   ];
-
     //   mockedExistsSync.mockReturnValue(true);
     //   mockedReadFileSync.mockReturnValue(JSON.stringify(mockMessages));
-
     //   const result = StatusMessages.loadFromFile();
-
     //   expect(result).toEqual(mockMessages);
     //   expect(mockedExistsSync).toHaveBeenCalledWith('/path/to/test.json');
     //   expect(mockedReadFileSync).toHaveBeenCalledWith('/path/to/test.json', 'utf8');
     // });
-
     // it('should throw error for non-existent file', () => {
     //   mockedExistsSync.mockReturnValue(false);
-
     //   expect(() => {
     //     StatusMessages.loadFromFile();
     //   }).toThrow('File not found: /path/to/nonexistent.json');
     // });
-
     // it('should throw error for invalid JSON', () => {
     //   mockedExistsSync.mockReturnValue(true);
     //   mockedReadFileSync.mockReturnValue('invalid json');
-
     //   expect(() => {
     //     StatusMessages.loadFromFile();
     //   }).toThrow();
     // });
-
     // it('should throw error for file read errors', () => {
     //   mockedExistsSync.mockReturnValue(true);
     //   mockedReadFileSync.mockImplementation(() => {
     //     throw new Error('Permission denied');
     //   });
-
     //   expect(() => {
     //     StatusMessages.loadFromFile('/path/to/protected.json');
     //   }).toThrow('Permission denied');

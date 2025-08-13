@@ -70,7 +70,6 @@ export declare class EvatrUtils {
      * Calculate check digit for German VAT-ID (for validation purposes)
      * @param vatIdNumber Numeric part of German VAT-ID (without DE prefix)
      * @returns number Check digit
-     * @TODO fix
      */
     static calculateGermanVatIdCheckDigit(vatIdNumber: string): number;
 }

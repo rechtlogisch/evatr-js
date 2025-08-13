@@ -32,9 +32,9 @@ export class StatusMessages {
    */
   static getAndCacheStatusMessages(): Record<string, StatusMessage> {
     const now = Date.now();
-    
+
     // Return cached messages if still valid
-    if (this.cachedMessages && (now - this.lastLoadTime) < this.CACHE_TTL) {
+    if (this.cachedMessages && now - this.lastLoadTime < this.CACHE_TTL) {
       return this.cachedMessages;
     }
 
@@ -86,12 +86,15 @@ export class StatusMessages {
         try {
           const fileContent = readFileSync(path, 'utf8');
           const messages: StatusMessage[] = JSON.parse(fileContent);
-          
+
           // Convert array to object keyed by status code
-          const messagesObj = messages.reduce((acc, msg) => {
-            acc[msg.status] = msg;
-            return acc;
-          }, {} as Record<string, StatusMessage>);
+          const messagesObj = messages.reduce(
+            (acc, msg) => {
+              acc[msg.status] = msg;
+              return acc;
+            },
+            {} as Record<string, StatusMessage>
+          );
 
           // eslint-disable-next-line no-console
           console.log(`✅ Loaded ${messages.length} status messages from: ${path}`);
@@ -119,11 +122,14 @@ export class StatusMessages {
     try {
       const fileContent = readFileSync(filePath, 'utf8');
       const messages: ApiStatusMessage[] = JSON.parse(fileContent);
-      
-      const messagesObj = messages.reduce((acc, msg) => {
-        acc[msg.status] = msg;
-        return acc;
-      }, {} as Record<string, ApiStatusMessage>);
+
+      const messagesObj = messages.reduce(
+        (acc, msg) => {
+          acc[msg.status] = msg;
+          return acc;
+        },
+        {} as Record<string, ApiStatusMessage>
+      );
 
       // Update cache
       // @TODO: map
@@ -153,7 +159,7 @@ export class StatusMessages {
    */
   static getStatusMessagesByCategory(category: StatusMessageCategory): StatusMessage[] {
     const messages = this.getStatusMessages();
-    return Object.values(messages).filter(msg => msg.category === category);
+    return Object.values(messages).filter((msg) => msg.category === category);
   }
 
   /**
@@ -161,7 +167,7 @@ export class StatusMessages {
    */
   static getStatusMessagesByHttp(http: number): StatusMessage[] {
     const messages = this.getStatusMessages();
-    return Object.values(messages).filter(msg => msg.http === http);
+    return Object.values(messages).filter((msg) => msg.http === http);
   }
 
   /**
@@ -199,22 +205,28 @@ export class StatusMessages {
   } {
     const messages = this.getStatusMessages();
     const messageArray = Object.values(messages);
-    
-    const byCategory = messageArray.reduce((acc, msg) => {
-      acc[msg.category] = (acc[msg.category] || 0) + 1;
-      return acc;
-    }, {} as Record<string, number>);
 
-    const byHttp = messageArray.reduce((acc, msg) => {
-      acc[msg.http || 0] = (acc[msg.http || 0] || 0) + 1;
-      return acc;
-    }, {} as Record<number, number>);
+    const byCategory = messageArray.reduce(
+      (acc, msg) => {
+        acc[msg.category] = (acc[msg.category] || 0) + 1;
+        return acc;
+      },
+      {} as Record<string, number>
+    );
+
+    const byHttp = messageArray.reduce(
+      (acc, msg) => {
+        acc[msg.http || 0] = (acc[msg.http || 0] || 0) + 1;
+        return acc;
+      },
+      {} as Record<number, number>
+    );
 
     return {
       total: messageArray.length,
       byCategory,
       byHttp,
-      source: this.cachedMessages === FALLBACK_STATUS_MESSAGES ? 'constants' : 'file'
+      source: this.cachedMessages === FALLBACK_STATUS_MESSAGES ? 'constants' : 'file',
     };
   }
 }

@@ -5,7 +5,7 @@
 import { EvatrClient } from './client';
 import { StatusMessages } from './status-loader';
 import axios from 'axios';
-import { ApiEUMemberState, ApiStatusMessage, EUMemberState, StatusMessage } from './types';
+import { ApiEUMemberState, ApiStatusMessage, Availability, StatusMessage } from './types';
 import { DEFAULT_BASE_URL } from './constants';
 
 // Mock axios
@@ -39,6 +39,48 @@ describe('EvatrClient', () => {
     jest.clearAllMocks();
   });
 
+  describe('getAvailability error handling', () => {
+    it('should wrap axios errors into EvatrApiError', async () => {
+      mockAxiosInstance.get.mockRejectedValue({ message: 'Network down' });
+
+      await expect(client.getAvailability()).rejects.toMatchObject({
+        name: 'EvatrApiError',
+        message: 'Network down',
+      });
+    });
+
+    it('should include http/status/field when available', async () => {
+      mockAxiosInstance.get.mockRejectedValue({
+        message: 'Service unavailable',
+        response: {
+          status: 503,
+          data: { status: 'evatr-9999', field: 'alpha2' },
+        },
+      });
+
+      await expect(client.getAvailability()).rejects.toMatchObject({
+        name: 'EvatrApiError',
+        message: 'Service unavailable',
+        http: 503,
+        status: 'evatr-9999',
+        field: 'alpha2',
+      });
+    });
+
+    it('should pass through EvatrApiError unchanged', async () => {
+      const evatrError = Object.assign(new Error('Already wrapped'), {
+        name: 'EvatrApiError',
+        http: 400,
+        status: 'evatr-0420',
+        field: 'testField',
+      });
+
+      mockAxiosInstance.get.mockRejectedValue(evatrError);
+
+      await expect(client.getAvailability()).rejects.toBe(evatrError);
+    });
+  });
+
   describe('constructor', () => {
     it('should create client with default config', () => {
       const client = new EvatrClient();
@@ -59,6 +101,7 @@ describe('EvatrClient', () => {
     it('should perform simple validation successfully', async () => {
       const mockResponse = {
         data: {
+          id: 'test-id',
           anfrageZeitpunkt: '2025-08-03T20:30:00Z',
           status: 'evatr-0000',
         },
@@ -77,10 +120,10 @@ describe('EvatrClient', () => {
       });
 
       expect(result.status).toBe('evatr-0000');
+      expect(result.id).toBe('test-id');
       expect(result.timestamp).toBe('2025-08-03T20:30:00Z');
       expect(result.vatIdOwn).toBe('DE123456789');
       expect(result.vatIdForeign).toBe('ATU12345678');
-      
     });
 
     it('should throw error for missing required fields', async () => {
@@ -99,7 +142,19 @@ describe('EvatrClient', () => {
           vatIdForeign: 'ATU12345678',
         })
       ).rejects.toThrow('Invalid format for vatIdOwn');
-      
+
+      // Ensure no API call was made for invalid VAT-ID
+      expect(mockAxiosInstance.post).not.toHaveBeenCalled();
+    });
+
+    it('should throw error for invalid foreign VAT-ID format', async () => {
+      await expect(
+        client.validateSimple({
+          vatIdOwn: 'DE123456789',
+          vatIdForeign: 'INVALID',
+        })
+      ).rejects.toThrow('Invalid format for vatIdForeign');
+
       // Ensure no API call was made for invalid VAT-ID
       expect(mockAxiosInstance.post).not.toHaveBeenCalled();
     });
@@ -107,6 +162,7 @@ describe('EvatrClient', () => {
     it('should include raw response data when includeRaw is true', async () => {
       const mockResponse = {
         data: {
+          id: 'test-id',
           anfrageZeitpunkt: '2025-08-03T20:30:00Z',
           status: 'evatr-0000',
         },
@@ -125,8 +181,9 @@ describe('EvatrClient', () => {
       });
 
       expect(result.status).toBe('evatr-0000');
+      expect(result.id).toBe('test-id');
       expect(result.raw).toBeDefined();
-      
+
       const rawData = JSON.parse(result.raw!);
       expect(rawData.headers).toEqual(mockResponse.headers);
       expect(rawData.data).toEqual(mockResponse.data);
@@ -135,6 +192,7 @@ describe('EvatrClient', () => {
     it('should not include raw response data when includeRaw is false or undefined', async () => {
       const mockResponse = {
         data: {
+          id: 'test-id',
           anfrageZeitpunkt: '2025-08-03T20:30:00Z',
           status: 'evatr-0000',
         },
@@ -166,6 +224,7 @@ describe('EvatrClient', () => {
     it('should perform qualified validation successfully', async () => {
       const mockResponse = {
         data: {
+          id: 'test-id',
           anfrageZeitpunkt: '2025-08-03T20:30:00Z',
           status: 'evatr-0000',
           ergFirmenname: 'A',
@@ -195,6 +254,7 @@ describe('EvatrClient', () => {
         plz: '12345',
       });
       expect(result.status).toBe('evatr-0000');
+      expect(result.id).toBe('test-id');
       expect(result.vatIdOwn).toBe('DE123456789');
       expect(result.vatIdForeign).toBe('ATU12345678');
       expect(result.company).toBe('A');
@@ -206,6 +266,7 @@ describe('EvatrClient', () => {
     it('should include raw response data when includeRaw is true', async () => {
       const mockResponse = {
         data: {
+          id: 'test-id',
           anfrageZeitpunkt: '2025-08-03T20:30:00Z',
           status: 'evatr-0000',
           ergFirmenname: 'A',
@@ -230,8 +291,9 @@ describe('EvatrClient', () => {
       });
 
       expect(result.status).toBe('evatr-0000');
+      expect(result.id).toBe('test-id');
       expect(result.raw).toBeDefined();
-      
+
       const rawData = JSON.parse(result.raw!);
       expect(rawData.headers).toEqual(mockResponse.headers);
       expect(rawData.data).toEqual(mockResponse.data);
@@ -252,41 +314,84 @@ describe('EvatrClient', () => {
 
       const result = await client.getStatusMessages();
       expect(result).toEqual(expectedResultStatusMessages);
-      expect(mockAxiosInstance.get).toHaveBeenCalledWith(DEFAULT_BASE_URL + '/info/statusmeldungen');
+      expect(mockAxiosInstance.get).toHaveBeenCalledWith(
+        DEFAULT_BASE_URL + '/info/statusmeldungen'
+      );
+    });
+
+    it('should map unknown categories to undefined', async () => {
+      const mockStatusMessages: ApiStatusMessage[] = [
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        { status: 'evatr-9999', kategorie: 'Unbekannt' as any, httpcode: 418, meldung: 'Teapot' },
+      ];
+
+      mockAxiosInstance.get.mockResolvedValue({ data: mockStatusMessages });
+
+      const result = await client.getStatusMessages();
+      expect(result).toHaveLength(1);
+      expect(result[0]).toMatchObject({
+        status: 'evatr-9999',
+        http: 418,
+        message: 'Teapot',
+      });
+      expect(result[0].category).toBeUndefined();
+    });
+
+    it('should wrap axios errors into EvatrApiError (network)', async () => {
+      mockAxiosInstance.get.mockRejectedValue({ message: 'Network error' });
+
+      await expect(client.getStatusMessages()).rejects.toMatchObject({
+        name: 'EvatrApiError',
+        message: 'Network error',
+      });
+    });
+
+    it('should include http/status/field from axios error response', async () => {
+      mockAxiosInstance.get.mockRejectedValue({
+        message: 'Request failed',
+        response: {
+          status: 503,
+          data: { status: 'evatr-1234', field: 'vatIdForeign' },
+        },
+      });
+
+      await expect(client.getStatusMessages()).rejects.toMatchObject({
+        name: 'EvatrApiError',
+        message: 'Request failed',
+        http: 503,
+        status: 'evatr-1234',
+        field: 'vatIdForeign',
+      });
     });
   });
 
-  describe('getEUMemberStates', () => {
-    it('should fetch EU member states from API', async () => {
+  describe('getAvailability', () => {
+    it('should fetch availability map from API', async () => {
       const mockMemberStates: ApiEUMemberState[] = [
         { alpha2: 'DE', name: 'Germany', verfuegbar: true },
         { alpha2: 'AT', name: 'Austria', verfuegbar: false },
       ];
 
-      const expectedResultMemberStates: EUMemberState[] = [
-        { code: 'DE', available: true },
-        { code: 'AT', available: false },
-      ];
+      const expectedAvailability: Availability = {
+        DE: true,
+        AT: false,
+      };
 
       mockAxiosInstance.get.mockResolvedValue({ data: mockMemberStates });
 
-      const result = await client.getEUMemberStates();
-      expect(result).toEqual(expectedResultMemberStates);
-      expect(mockAxiosInstance.get).toHaveBeenCalledWith(DEFAULT_BASE_URL + '/info/eu_mitgliedstaaten');
+      const result = await client.getAvailability();
+      expect(result).toEqual(expectedAvailability);
+      expect(mockAxiosInstance.get).toHaveBeenCalledWith(
+        DEFAULT_BASE_URL + '/info/eu_mitgliedstaaten'
+      );
     });
   });
 
   describe('status checking methods', () => {
     beforeEach(() => {
-      mockedStatusMessages.isSuccessStatus.mockImplementation(
-        (status) => status === 'evatr-0000'
-      );
-      mockedStatusMessages.isErrorStatus.mockImplementation(
-        (status) => status === 'evatr-0004'
-      );
-      mockedStatusMessages.isWarningStatus.mockImplementation(
-        (status) => status === 'evatr-2002'
-      );
+      mockedStatusMessages.isSuccessStatus.mockImplementation((status) => status === 'evatr-0000');
+      mockedStatusMessages.isErrorStatus.mockImplementation((status) => status === 'evatr-0004');
+      mockedStatusMessages.isWarningStatus.mockImplementation((status) => status === 'evatr-2002');
       mockedStatusMessages.getStatusMessage.mockReturnValue({
         status: 'evatr-0000',
         category: 'Result',
@@ -322,7 +427,7 @@ describe('EvatrClient', () => {
       // Valid VAT-IDs
       expect(EvatrClient.checkVatIdSyntax('DE123456789')).toBe(true);
       expect(EvatrClient.checkVatIdSyntax('ATU12345678')).toBe(true);
-      
+
       // Invalid VAT-IDs
       expect(EvatrClient.checkVatIdSyntax('INVALID')).toBe(false);
       expect(EvatrClient.checkVatIdSyntax('DE12345678')).toBe(false); // Wrong length
@@ -347,6 +452,7 @@ describe('EvatrClient', () => {
     it('should return normalized VAT IDs in simple validation response', async () => {
       const mockResponse = {
         data: {
+          id: 'test-id',
           anfrageZeitpunkt: '2025-08-03T20:30:00Z',
           status: 'evatr-0000',
         },
@@ -364,11 +470,13 @@ describe('EvatrClient', () => {
       expect(result.vatIdOwn).toBe('DE123456789');
       expect(result.vatIdForeign).toBe('ATU12345678');
       expect(result.status).toBe('evatr-0000');
+      expect(result.id).toBe('test-id');
     });
 
     it('should return normalized VAT IDs in qualified validation response', async () => {
       const mockResponse = {
         data: {
+          id: 'test-id',
           anfrageZeitpunkt: '2025-08-03T20:30:00Z',
           status: 'evatr-0000',
           ergFirmenname: 'A',
@@ -391,11 +499,13 @@ describe('EvatrClient', () => {
       expect(result.vatIdForeign).toBe('ATU12345678');
       expect(result.company).toBe('A');
       expect(result.location).toBe('A');
+      expect(result.id).toBe('test-id');
     });
 
     it('should return normalized VAT IDs in extended response', async () => {
       const mockResponse = {
         data: {
+          id: 'test-id',
           anfrageZeitpunkt: '2025-08-03T20:30:00Z',
           status: 'evatr-0000',
           gueltigAb: '2025-01-01',
@@ -404,7 +514,7 @@ describe('EvatrClient', () => {
       };
 
       mockAxiosInstance.post.mockResolvedValue(mockResponse);
-      
+
       // Mock status message for extended response
       mockedStatusMessages.getStatusMessage.mockReturnValue({
         status: 'evatr-0000',
@@ -415,16 +525,20 @@ describe('EvatrClient', () => {
       mockedStatusMessages.isSuccessStatus.mockReturnValue(true);
 
       // Test extended response with unnormalized input
-      const result = await client.validateSimple({
-        vatIdOwn: 'de123456789',
-        vatIdForeign: 'atu12345678',
-      }, true);
+      const result = await client.validateSimple(
+        {
+          vatIdOwn: 'de123456789',
+          vatIdForeign: 'atu12345678',
+        },
+        true
+      );
 
       // Should return normalized VAT IDs in extended response
       expect(result.vatIdOwn).toBe('DE123456789');
       expect(result.vatIdForeign).toBe('ATU12345678');
       expect(result.valid).toBe(true);
       expect(result.message).toBe('Valid');
+      expect(result.id).toBe('test-id');
       expect(result.timestamp).toBeInstanceOf(Date);
       expect(result.validFrom).toBeInstanceOf(Date);
       expect(result.validTill).toBeInstanceOf(Date);
@@ -433,6 +547,7 @@ describe('EvatrClient', () => {
     it('should include raw response data in extended response when includeRaw is true', async () => {
       const mockResponse = {
         data: {
+          id: 'test-id',
           anfrageZeitpunkt: '2025-08-03T20:30:00Z',
           status: 'evatr-0000',
           gueltigAb: '2025-01-01',
@@ -440,12 +555,12 @@ describe('EvatrClient', () => {
         },
         headers: {
           'content-type': 'application/json',
-          'server': 'nginx/1.20.1',
+          server: 'nginx/1.20.1',
         },
       };
 
       mockAxiosInstance.post.mockResolvedValue(mockResponse);
-      
+
       // Mock status message for extended response
       mockedStatusMessages.getStatusMessage.mockReturnValue({
         status: 'evatr-0000',
@@ -456,21 +571,25 @@ describe('EvatrClient', () => {
       mockedStatusMessages.isSuccessStatus.mockReturnValue(true);
 
       // Test extended response with includeRaw
-      const result = await client.validateSimple({
-        vatIdOwn: 'DE123456789',
-        vatIdForeign: 'ATU12345678',
-        includeRaw: true,
-      }, true);
+      const result = await client.validateSimple(
+        {
+          vatIdOwn: 'DE123456789',
+          vatIdForeign: 'ATU12345678',
+          includeRaw: true,
+        },
+        true
+      );
 
       expect(result.vatIdOwn).toBe('DE123456789');
       expect(result.vatIdForeign).toBe('ATU12345678');
       expect(result.valid).toBe(true);
       expect(result.message).toBe('Valid');
+      expect(result.id).toBe('test-id');
       expect(result.timestamp).toBeInstanceOf(Date);
       expect(result.validFrom).toBeInstanceOf(Date);
       expect(result.validTill).toBeInstanceOf(Date);
       expect(result.raw).toBeDefined();
-      
+
       const rawData = JSON.parse(result.raw!);
       expect(rawData.headers).toEqual(mockResponse.headers);
       expect(rawData.data).toEqual(mockResponse.data);
@@ -479,6 +598,7 @@ describe('EvatrClient', () => {
     it('should handle various VAT ID input formats and normalize them consistently', async () => {
       const mockResponse = {
         data: {
+          id: 'test-id',
           anfrageZeitpunkt: '2025-08-03T20:30:00Z',
           status: 'evatr-0000',
         },

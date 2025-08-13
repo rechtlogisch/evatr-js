@@ -1,7 +1,7 @@
 /**
  * Main client class for the eVatR API
  */
-import { EUMemberState, EvatrClientConfig, ExtendedResponse, QualifiedRequest, Request, Response, SimpleRequest, StatusMessage } from './types';
+import { Availability, EvatrClientConfig, ExtendedResponse, QualifiedRequest, Request, Response, SimpleRequest, StatusMessage } from './types';
 /**
  * EvatrClient - Main client for interacting with the eVatR API
  */
@@ -41,10 +41,10 @@ export declare class EvatrClient {
      */
     getStatusMessages(): Promise<StatusMessage[]>;
     /**
-     * Get EU member states and their availability
-     * @returns Promise<ApiEUMemberState[]>
+     * Get availability of VIES per EU member state.
+     * Returns a map keyed by ISO alpha-2 country code (e.g., "DE") with boolean availability.
      */
-    getEUMemberStates(): Promise<EUMemberState[]>;
+    getAvailability(): Promise<Availability>;
     /**
      * Get status message by status code
      * @param statusCode Status code (e.g., "evatr-0000")
