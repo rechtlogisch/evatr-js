@@ -48,8 +48,8 @@ or
 const result = await client.validateQualified({
   vatIdOwn: 'DE123456789',
   vatIdForeign: 'ATU12345678',
-  company: 'Test GmbH',
-  location: 'Wien'
+  company: 'Musterhaus GmbH & Co KG',
+  location: 'musterort'
 });
 
 console.log(result);
@@ -106,13 +106,13 @@ Validates VAT-ID and verifies company data:
 
 ```typescript
 await client.validateQualified({
-  vatIdOwn: 'DE123456789',     // Your German VAT-ID (required)
-  vatIdForeign: 'ATU12345678', // VAT-ID to validate (required)
-  company: 'Test GmbH',        // Company name (required)
-  location: 'Wien',            // City (required)
-  street: 'Musterstr. 1',      // Street address (optional)
-  zip: '1010',                 // Postal code (optional)
-  includeRaw: true,            // Include raw response (optional)
+  vatIdOwn: 'DE123456789',            // Your German VAT-ID (required)
+  vatIdForeign: 'ATU12345678',        // VAT-ID to validate (required)
+  company: 'Musterhaus GmbH & Co KG', // Company name (required)
+  location: 'musterort',              // City (required)
+  street: 'Musterstrasse 22',         // Street address (optional)
+  zip: '12345',                       // Postal code (optional)
+  includeRaw: true,                   // Include raw response (optional)
 });
 ```
 
@@ -164,10 +164,10 @@ interface Response {
   vatIdForeign: string;      // Normalized foreign VAT-ID used for API request
   validFrom?: string;        // Valid from date (ISO string)
   validTill?: string;        // Valid until date (ISO string)
-  company?: QualifiedResultCode;   // Company name validation result
-  street?: QualifiedResultCode;    // Street validation result
-  zip?: QualifiedResultCode;       // ZIP code validation result
-  location?: QualifiedResultCode;  // Location validation result
+  company?: QualifiedResultCode;  // Company name validation result
+  street?: QualifiedResultCode;   // Street validation result
+  zip?: QualifiedResultCode;      // ZIP code validation result
+  location?: QualifiedResultCode; // Location validation result
   raw?: string;                // Raw response from API (only if includeRaw is true)
 }
 ```
