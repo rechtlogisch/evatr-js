@@ -149,8 +149,5 @@ export interface ApiEUMemberState {
     /** Whether the VIES system is available for this country */
     verfuegbar: boolean;
 }
-export interface EUMemberState {
-    code: string;
-    available: boolean;
-}
+export type Availability = Record<string, boolean>;
 //# sourceMappingURL=types.d.ts.map

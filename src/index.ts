@@ -13,7 +13,7 @@ export { EvatrClient } from './client';
 export type {
   EvatrApiError,
   EvatrClientConfig,
-  EUMemberState,
+  Availability,
   ExtendedResponse,
   QualifiedRequest,
   Response,

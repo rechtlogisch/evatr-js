@@ -6,7 +6,7 @@ import {
   ApiStatusMessage,
   ApiEUMemberState,
   EvatrClientConfig,
-  EUMemberState,
+  Availability,
   QualifiedResultCode,
   QualifiedRequest,
   Request,
@@ -237,24 +237,15 @@ describe('TypeScript Types', () => {
     });
   });
 
-  describe('EUMemberState', () => {
-    it('should accept valid member state', () => {
-      const memberState: EUMemberState = {
-        code: 'DE',
-        available: true,
+  describe('Availability', () => {
+    it('should accept availability map', () => {
+      const availability: Availability = {
+        DE: true,
+        AT: false,
       };
 
-      expect(memberState.code).toBe('DE');
-      expect(memberState.available).toBe(true);
-    });
-
-    it('should accept unavailable member state', () => {
-      const memberState: EUMemberState = {
-        code: 'XX',
-        available: false,
-      };
-
-      expect(memberState.available).toBe(false);
+      expect(availability.DE).toBe(true);
+      expect(availability.AT).toBe(false);
     });
   });
 

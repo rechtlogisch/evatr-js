@@ -164,7 +164,5 @@ export interface ApiEUMemberState {
   verfuegbar: boolean;
 }
 
-export interface EUMemberState {
-  code: string;
-  available: boolean;
-}
+// Availability map keyed by ISO alpha-2 country code (e.g., "DE", "AT")
+export type Availability = Record<string, boolean>;

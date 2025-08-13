@@ -57,7 +57,7 @@ Usage:
   npm run update:api update-constants <file>  - Update constants.ts from file
 
 Examples:
-  npm run update:api update-constants ./docs/statusmeldungen-${new Date().toISOString().substr(0, 10)}.json
+  npm run update:api update-constants ./docs/statusmeldungen-${new Date().toISOString().substring(0, 10)}.json
         `);
         break;
     }

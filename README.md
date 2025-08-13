@@ -125,8 +125,9 @@ await client.validateQualified({
 // Get status messages
 const statusMessages = await client.getStatusMessages();
 
-// Get EU member states and their availability
-const memberStates = await client.getEUMemberStates();
+// Get availability map by EU member state (alpha-2 code -> boolean)
+const availability = await client.getAvailability();
+const isGermanyAvailable = availability.DE === true;
 
 // Get content of specific status message
 const message = client.getStatusMessage('evatr-0000');

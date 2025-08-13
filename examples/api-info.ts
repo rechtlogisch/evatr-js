@@ -10,10 +10,12 @@ async function apiInfoExample(): Promise<void> {
       const statusMessages = await client.getStatusMessages();
       console.log('Number of status messages:', statusMessages.length);
       
-      // Get EU member states
-      const memberStates = await client.getEUMemberStates();
-      console.log('Number of EU member states:', memberStates.length);
-      console.log('Available member states:', memberStates.filter(state => state.available).map(state => `${state.code}: ${state.name}`));
+      // Get availability map by EU member state
+      const availability = await client.getAvailability();
+      const codes = Object.keys(availability);
+      console.log('Number of EU member states:', codes.length);
+      const availableCodes = codes.filter((code) => availability[code]);
+      console.log('Available member states (codes):', availableCodes.join(', '));
       
     } catch (error) {
       console.error('Error getting API info:', error);

@@ -5,7 +5,7 @@
 import { EvatrClient } from './client';
 import { StatusMessages } from './status-loader';
 import axios from 'axios';
-import { ApiEUMemberState, ApiStatusMessage, EUMemberState, StatusMessage } from './types';
+import { ApiEUMemberState, ApiStatusMessage, Availability, StatusMessage } from './types';
 import { DEFAULT_BASE_URL } from './constants';
 
 // Mock axios
@@ -37,6 +37,48 @@ describe('EvatrClient', () => {
 
     client = new EvatrClient();
     jest.clearAllMocks();
+  });
+
+  describe('getAvailability error handling', () => {
+    it('should wrap axios errors into EvatrApiError', async () => {
+      mockAxiosInstance.get.mockRejectedValue({ message: 'Network down' });
+
+      await expect(client.getAvailability()).rejects.toMatchObject({
+        name: 'EvatrApiError',
+        message: 'Network down',
+      });
+    });
+
+    it('should include http/status/field when available', async () => {
+      mockAxiosInstance.get.mockRejectedValue({
+        message: 'Service unavailable',
+        response: {
+          status: 503,
+          data: { status: 'evatr-9999', field: 'alpha2' },
+        },
+      });
+
+      await expect(client.getAvailability()).rejects.toMatchObject({
+        name: 'EvatrApiError',
+        message: 'Service unavailable',
+        http: 503,
+        status: 'evatr-9999',
+        field: 'alpha2',
+      });
+    });
+
+    it('should pass through EvatrApiError unchanged', async () => {
+      const evatrError = Object.assign(new Error('Already wrapped'), {
+        name: 'EvatrApiError',
+        http: 400,
+        status: 'evatr-0420',
+        field: 'testField',
+      });
+
+      mockAxiosInstance.get.mockRejectedValue(evatrError);
+
+      await expect(client.getAvailability()).rejects.toBe(evatrError);
+    });
   });
 
   describe('constructor', () => {
@@ -100,6 +142,18 @@ describe('EvatrClient', () => {
           vatIdForeign: 'ATU12345678',
         })
       ).rejects.toThrow('Invalid format for vatIdOwn');
+
+      // Ensure no API call was made for invalid VAT-ID
+      expect(mockAxiosInstance.post).not.toHaveBeenCalled();
+    });
+
+    it('should throw error for invalid foreign VAT-ID format', async () => {
+      await expect(
+        client.validateSimple({
+          vatIdOwn: 'DE123456789',
+          vatIdForeign: 'INVALID',
+        })
+      ).rejects.toThrow('Invalid format for vatIdForeign');
 
       // Ensure no API call was made for invalid VAT-ID
       expect(mockAxiosInstance.post).not.toHaveBeenCalled();
@@ -264,24 +318,69 @@ describe('EvatrClient', () => {
         DEFAULT_BASE_URL + '/info/statusmeldungen'
       );
     });
+
+    it('should map unknown categories to undefined', async () => {
+      const mockStatusMessages: ApiStatusMessage[] = [
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        { status: 'evatr-9999', kategorie: 'Unbekannt' as any, httpcode: 418, meldung: 'Teapot' },
+      ];
+
+      mockAxiosInstance.get.mockResolvedValue({ data: mockStatusMessages });
+
+      const result = await client.getStatusMessages();
+      expect(result).toHaveLength(1);
+      expect(result[0]).toMatchObject({
+        status: 'evatr-9999',
+        http: 418,
+        message: 'Teapot',
+      });
+      expect(result[0].category).toBeUndefined();
+    });
+
+    it('should wrap axios errors into EvatrApiError (network)', async () => {
+      mockAxiosInstance.get.mockRejectedValue({ message: 'Network error' });
+
+      await expect(client.getStatusMessages()).rejects.toMatchObject({
+        name: 'EvatrApiError',
+        message: 'Network error',
+      });
+    });
+
+    it('should include http/status/field from axios error response', async () => {
+      mockAxiosInstance.get.mockRejectedValue({
+        message: 'Request failed',
+        response: {
+          status: 503,
+          data: { status: 'evatr-1234', field: 'vatIdForeign' },
+        },
+      });
+
+      await expect(client.getStatusMessages()).rejects.toMatchObject({
+        name: 'EvatrApiError',
+        message: 'Request failed',
+        http: 503,
+        status: 'evatr-1234',
+        field: 'vatIdForeign',
+      });
+    });
   });
 
-  describe('getEUMemberStates', () => {
-    it('should fetch EU member states from API', async () => {
+  describe('getAvailability', () => {
+    it('should fetch availability map from API', async () => {
       const mockMemberStates: ApiEUMemberState[] = [
         { alpha2: 'DE', name: 'Germany', verfuegbar: true },
         { alpha2: 'AT', name: 'Austria', verfuegbar: false },
       ];
 
-      const expectedResultMemberStates: EUMemberState[] = [
-        { code: 'DE', available: true },
-        { code: 'AT', available: false },
-      ];
+      const expectedAvailability: Availability = {
+        DE: true,
+        AT: false,
+      };
 
       mockAxiosInstance.get.mockResolvedValue({ data: mockMemberStates });
 
-      const result = await client.getEUMemberStates();
-      expect(result).toEqual(expectedResultMemberStates);
+      const result = await client.getAvailability();
+      expect(result).toEqual(expectedAvailability);
       expect(mockAxiosInstance.get).toHaveBeenCalledWith(
         DEFAULT_BASE_URL + '/info/eu_mitgliedstaaten'
       );

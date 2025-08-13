@@ -4,7 +4,7 @@
  */
 
 import { EvatrClient } from './client';
-import { StatusMessage, EUMemberState } from './types';
+import { StatusMessage, Availability } from './types';
 
 describe('EvatrClient External Tests', () => {
   let client: EvatrClient;
@@ -173,52 +173,40 @@ describe('EvatrClient External Tests', () => {
     }, 30000);
   });
 
-  describe('getEUMemberStates - External API', () => {
-    it('should fetch EU member states from real API', async () => {
-      const result = await client.getEUMemberStates();
+  describe('getAvailability - External API', () => {
+    it('should fetch availability map from real API', async () => {
+      const result: Availability = await client.getAvailability();
 
-      expect(Array.isArray(result)).toBe(true);
-      expect(result.length).toBeGreaterThan(0);
+      expect(typeof result).toBe('object');
+      const codes = Object.keys(result);
+      expect(codes.length).toBeGreaterThan(0);
 
-      // Check structure of first member state
-      const firstState = result[0] as EUMemberState;
-      expect(firstState).toBeDefined();
-      expect(typeof firstState.code).toBe('string');
-      expect(typeof firstState.available).toBe('boolean');
-
-      // Code should be 2-letter country code
-      expect(firstState.code).toMatch(/^[A-Z]{2}$/);
-      expect(firstState.code.length).toBe(2);
+      // Check structure of first entry
+      const firstCode = codes[0];
+      expect(firstCode).toMatch(/^[A-Z]{2}$/);
+      expect(typeof result[firstCode]).toBe('boolean');
     }, 30000);
 
-    it('should return expected EU member states', async () => {
-      const result = await client.getEUMemberStates();
+    it('should contain expected EU member states', async () => {
+      const result: Availability = await client.getAvailability();
 
-      // Should contain Germany
-      const germany = result.find((state) => state.code === 'DE');
-      expect(germany).toBeDefined();
+      // Should contain Germany, Austria, France
+      expect(result.DE).not.toBeUndefined();
+      expect(result.AT).not.toBeUndefined();
+      expect(result.FR).not.toBeUndefined();
 
-      // Should contain Austria
-      const austria = result.find((state) => state.code === 'AT');
-      expect(austria).toBeDefined();
-
-      // Should contain France
-      const france = result.find((state) => state.code === 'FR');
-      expect(france).toBeDefined();
-
-      // All states should have valid structure
-      result.forEach((state) => {
-        expect(state.code).toMatch(/^[A-Z]{2}$/);
-        expect(typeof state.available).toBe('boolean');
-      });
+      // All keys should be valid country codes and values booleans
+      for (const [code, available] of Object.entries(result)) {
+        expect(code).toMatch(/^[A-Z]{2}$/);
+        expect(typeof available).toBe('boolean');
+      }
     }, 30000);
 
-    it('should return states with availability information', async () => {
-      const result = await client.getEUMemberStates();
+    it('should have at least some available states', async () => {
+      const result: Availability = await client.getAvailability();
 
-      // At least some states should be available
-      const availableStates = result.filter((state) => state.available === true);
-      expect(availableStates.length).toBeGreaterThan(0);
+      const availableCount = Object.values(result).filter((v) => v === true).length;
+      expect(availableCount).toBeGreaterThan(0);
     }, 30000);
   });
 
@@ -305,15 +293,13 @@ describe('EvatrClient External Tests', () => {
       });
     }, 30000);
 
-    it('should validate EU member states API response structure', async () => {
-      const memberStates = await client.getEUMemberStates();
+    it('should validate availability API response structure', async () => {
+      const availability: Availability = await client.getAvailability();
 
-      // Validate each state has required structure
-      memberStates.forEach((state: EUMemberState) => {
-        expect(state).toMatchObject({
-          code: expect.stringMatching(/^[A-Z]{2}$/),
-          available: expect.any(Boolean),
-        });
+      // Validate structure: keys are country codes, values are booleans
+      Object.entries(availability).forEach(([code, available]) => {
+        expect(code).toMatch(/^[A-Z]{2}$/);
+        expect(typeof available).toBe('boolean');
       });
     }, 30000);
   });

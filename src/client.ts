@@ -8,7 +8,7 @@ import {
   ApiRequest,
   ApiResponse,
   ApiStatusMessage,
-  EUMemberState,
+  Availability,
   EvatrApiError,
   EvatrClientConfig,
   ExtendedResponse,
@@ -145,19 +145,20 @@ export class EvatrClient {
   }
 
   /**
-   * Get EU member states and their availability
-   * @returns Promise<ApiEUMemberState[]>
+   * Get availability of VIES per EU member state.
+   * Returns a map keyed by ISO alpha-2 country code (e.g., "DE") with boolean availability.
    */
-  async getEUMemberStates(): Promise<EUMemberState[]> {
+  async getAvailability(): Promise<Availability> {
     try {
       const response: AxiosResponse<ApiEUMemberState[]> = await this.httpClient.get(
         ENDPOINTS.EU_MEMBER_STATES
       );
 
-      return response.data.map((apiState) => ({
-        code: apiState.alpha2,
-        available: apiState.verfuegbar,
-      })) as EUMemberState[];
+      const availability: Availability = {};
+      for (const apiState of response.data) {
+        availability[apiState.alpha2] = apiState.verfuegbar;
+      }
+      return availability;
     } catch (error) {
       throw this.handleError(error);
     }

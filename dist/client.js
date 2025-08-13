@@ -83,16 +83,17 @@ class EvatrClient {
         }
     }
     /**
-     * Get EU member states and their availability
-     * @returns Promise<ApiEUMemberState[]>
+     * Get availability of VIES per EU member state.
+     * Returns a map keyed by ISO alpha-2 country code (e.g., "DE") with boolean availability.
      */
-    async getEUMemberStates() {
+    async getAvailability() {
         try {
             const response = await this.httpClient.get(constants_1.ENDPOINTS.EU_MEMBER_STATES);
-            return response.data.map((apiState) => ({
-                code: apiState.alpha2,
-                available: apiState.verfuegbar,
-            }));
+            const availability = {};
+            for (const apiState of response.data) {
+                availability[apiState.alpha2] = apiState.verfuegbar;
+            }
+            return availability;
         }
         catch (error) {
             throw this.handleError(error);
