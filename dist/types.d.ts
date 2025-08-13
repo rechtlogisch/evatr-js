@@ -22,6 +22,8 @@ export interface ApiRequest {
  * Response interface for VAT-ID validation
  */
 export interface ApiResponse {
+    /** Technical ID given by the API, related to the request */
+    id: string;
     /** Timestamp of the query */
     anfrageZeitpunkt: string;
     /** Status code (e.g., "evatr-0000") */
@@ -63,6 +65,7 @@ export type QualifiedRequest = {
     includeRaw?: boolean;
 };
 export interface Response {
+    id: string;
     timestamp: string;
     status: string;
     vatIdOwn: string;
@@ -76,6 +79,7 @@ export interface Response {
     raw?: string;
 }
 export interface ExtendedResponse {
+    id: string;
     timestamp: Date;
     valid: boolean;
     status: string;

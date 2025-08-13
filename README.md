@@ -156,6 +156,7 @@ All validation methods return a `Response` object by default:
 
 ```typescript
 interface Response {
+  id: string;                // Technical request ID returned by the API, related to the request
   timestamp: string;         // Query timestamp (ISO string)
   status: string;            // Status code (e.g., "evatr-0000")
   vatIdOwn: string;          // Normalized own VAT-ID used for API request
@@ -174,6 +175,7 @@ The API uses German terms, which have been mapped to the following English param
 
 | BZSt API        | evatr-api     |
 |-----------------|---------------|
+| id              | id            |
 | anfrageZeitpunkt| timestamp     |
 | status          | status        |
 | gueltigAb       | validFrom     |
@@ -189,6 +191,7 @@ By passing `true` as the second parameter to function `validateSimple({...}, tru
 
 ```typescript
 interface ExtendedResponse {
+  id: string;                      // Technical request ID returned by the API, related to the request
   timestamp: Date;                 // Date object
   valid: boolean;                  // true if isSuccessStatus()
   status: string;
@@ -359,24 +362,24 @@ The library includes utilities to check for API updates:
 
 ```bash
 # Check for all updates
-npm run update-api check
+npm run update:api check
 
 # Check only API documentation
-npm run update-api api-docs
+npm run update:api api-docs
 
 # Check only status messages
-npm run update-api status-messages
+npm run update:api status-messages
 ```
 
 ### Update Workflow
 
-1. **Check for updates**: Run `npm run update-api check` to see if there are new versions
+1. **Check for updates**: Run `npm run update:api check` to see if there are new versions
 2. **Inspect output**: Status message changes are displayed with added, removed, and modified messages
-3. **Compare differences**: Compare current file with updated versions using for example `diff`, New files are saved with timestamps (e.g., `statusmeldungen-2025-08-03.json`)
+3. **Compare differences**: Compare current file with updated versions using for example `diff`, New files are saved with timestamps (e.g., `statusmeldungen-2025-08-01.json`)
 4. **Update constants**: Update the TypeScript constants file with new messages:
 
 ```bash
-npm run update-api update-constants ./docs/statusmeldungen-2025-08-03.json
+npm run update:api update-constants ./docs/statusmeldungen-2025-08-01.json
 ```
 
 ## Rate Limits and Best Practices

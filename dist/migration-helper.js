@@ -84,7 +84,11 @@ class EvatrMigrationHelper {
             const statusMessage = status_loader_1.StatusMessages.getStatusMessage(response.status);
             // Parse timestamp to extract date and time
             const timestamp = new Date(response.timestamp);
-            const date = timestamp.toLocaleDateString('de-DE', { year: 'numeric', month: '2-digit', day: '2-digit' }); // DD.MM.YYY
+            const date = timestamp.toLocaleDateString('de-DE', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+            }); // DD.MM.YYY
             const time = timestamp.toTimeString().split(' ')[0]; // HH:MM:SS
             // Map status to legacy error code
             const errorCode = this.mapStatusToErrorCode(response.status);
@@ -112,7 +116,11 @@ class EvatrMigrationHelper {
             const errorCode = error.http || 500;
             const timestamp = new Date();
             return {
-                date: timestamp.toLocaleDateString('de-DE', { year: 'numeric', month: '2-digit', day: '2-digit' }), // DD.MM.YYY
+                date: timestamp.toLocaleDateString('de-DE', {
+                    year: 'numeric',
+                    month: '2-digit',
+                    day: '2-digit',
+                }), // DD.MM.YYY
                 time: timestamp.toTimeString().split(' ')[0],
                 errorCode,
                 errorDescription: error.message,
@@ -141,7 +149,11 @@ class EvatrMigrationHelper {
             const errorCode = this.mapStatusToErrorCode(response.status);
             // Parse timestamp to extract date and time
             const timestamp = new Date(response.timestamp);
-            const date = timestamp.toLocaleDateString('de-DE', { year: 'numeric', month: '2-digit', day: '2-digit' }); // DD.MM.YYY
+            const date = timestamp.toLocaleDateString('de-DE', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+            }); // DD.MM.YYY
             const time = timestamp.toTimeString().split(' ')[0]; // HH:MM:SS
             const result = {
                 date,
@@ -179,7 +191,11 @@ class EvatrMigrationHelper {
             const errorCode = error.http || 500;
             const timestamp = new Date();
             return {
-                date: timestamp.toLocaleDateString('de-DE', { year: 'numeric', month: '2-digit', day: '2-digit' }), // DD.MM.YYY
+                date: timestamp.toLocaleDateString('de-DE', {
+                    year: 'numeric',
+                    month: '2-digit',
+                    day: '2-digit',
+                }), // DD.MM.YYY
                 time: timestamp.toTimeString().split(' ')[0],
                 errorCode,
                 errorDescription: error.message,

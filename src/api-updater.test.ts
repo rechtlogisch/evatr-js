@@ -169,9 +169,7 @@ describe('EvatrApiUpdater', () => {
 
   describe('compareStatusMessages', () => {
     it('should detect added messages', () => {
-      const current = [
-        { status: 'evatr-0000', category: 'Ergebnis', http: 200, message: 'Valid' },
-      ];
+      const current = [{ status: 'evatr-0000', category: 'Ergebnis', http: 200, message: 'Valid' }];
 
       const latest = [
         { status: 'evatr-0000', category: 'Ergebnis', http: 200, message: 'Valid' },
@@ -194,9 +192,7 @@ describe('EvatrApiUpdater', () => {
         { status: 'evatr-0001', category: 'Hinweis', http: 400, message: 'Old' },
       ];
 
-      const latest = [
-        { status: 'evatr-0000', category: 'Ergebnis', http: 200, message: 'Valid' },
-      ];
+      const latest = [{ status: 'evatr-0000', category: 'Ergebnis', http: 200, message: 'Valid' }];
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const diff = (EvatrApiUpdater as any).compareStatusMessages(current, latest);
@@ -255,9 +251,7 @@ describe('EvatrApiUpdater', () => {
   describe('printStatusMessageDiff', () => {
     it('should print differences when messages are added', () => {
       const diff = {
-        added: [
-          { status: 'evatr-0001', category: 'Result', http: 200, message: 'New message' },
-        ],
+        added: [{ status: 'evatr-0001', category: 'Result', http: 200, message: 'New message' }],
         removed: [],
         modified: [],
       };
@@ -339,7 +333,9 @@ export const STATUS_MESSAGES: Record<string, ApiStatusMessage> = {
         throw new Error('File not found');
       });
 
-      await expect(EvatrApiUpdater.updateConstantsFile(statusMessages)).rejects.toThrow('File not found');
+      await expect(EvatrApiUpdater.updateConstantsFile(statusMessages)).rejects.toThrow(
+        'File not found'
+      );
     });
 
     it('should handle file write errors in updateConstantsFile', async () => {
@@ -356,7 +352,9 @@ export const STATUS_MESSAGES: Record<string, ApiStatusMessage> = {};
         throw new Error('Permission denied');
       });
 
-      await expect(EvatrApiUpdater.updateConstantsFile(statusMessages)).rejects.toThrow('Permission denied');
+      await expect(EvatrApiUpdater.updateConstantsFile(statusMessages)).rejects.toThrow(
+        'Permission denied'
+      );
     });
   });
 
@@ -369,9 +367,17 @@ export const STATUS_MESSAGES: Record<string, ApiStatusMessage> = {};
       mockedReadFileSync.mockReturnValue(JSON.stringify({ info: { version: '1.0.0' } }));
 
       // Mock status messages check - no update
-      const statusMessagesResponse = { data: [{ status: 'evatr-0000', kategorie: 'Ergebnis', httpcode: 200, meldung: 'Valid' }] };
-      (axios.get as jest.MockedFunction<typeof axios.get>).mockResolvedValue(statusMessagesResponse);
-      mockedReadFileSync.mockReturnValue(JSON.stringify([{ status: 'evatr-0000', kategorie: 'Ergebnis', httpcode: 200, meldung: 'Valid' }]));
+      const statusMessagesResponse = {
+        data: [{ status: 'evatr-0000', kategorie: 'Ergebnis', httpcode: 200, meldung: 'Valid' }],
+      };
+      (axios.get as jest.MockedFunction<typeof axios.get>).mockResolvedValue(
+        statusMessagesResponse
+      );
+      mockedReadFileSync.mockReturnValue(
+        JSON.stringify([
+          { status: 'evatr-0000', kategorie: 'Ergebnis', httpcode: 200, meldung: 'Valid' },
+        ])
+      );
 
       await expect(EvatrApiUpdater.checkAndUpdateAll()).resolves.not.toThrow();
     });
@@ -387,12 +393,22 @@ export const STATUS_MESSAGES: Record<string, ApiStatusMessage> = {};
       (axios.get as jest.MockedFunction<typeof axios.get>).mockResolvedValueOnce(apiDocsResponse);
 
       // Mock status messages check - update available
-      const statusMessagesResponse = { data: [{ status: 'evatr-0001', category: 'Result', http: 200, message: 'New message' }] };
-      (axios.get as jest.MockedFunction<typeof axios.get>).mockResolvedValueOnce(statusMessagesResponse);
-      mockedReadFileSync.mockReturnValue(JSON.stringify([{ status: 'evatr-0000', category: 'Result', http: 200, message: 'Old message' }]));
+      const statusMessagesResponse = {
+        data: [{ status: 'evatr-0001', category: 'Result', http: 200, message: 'New message' }],
+      };
+      (axios.get as jest.MockedFunction<typeof axios.get>).mockResolvedValueOnce(
+        statusMessagesResponse
+      );
+      mockedReadFileSync.mockReturnValue(
+        JSON.stringify([
+          { status: 'evatr-0000', category: 'Result', http: 200, message: 'Old message' },
+        ])
+      );
 
       // Mock status messages download
-      (axios.get as jest.MockedFunction<typeof axios.get>).mockResolvedValueOnce(statusMessagesResponse);
+      (axios.get as jest.MockedFunction<typeof axios.get>).mockResolvedValueOnce(
+        statusMessagesResponse
+      );
 
       await expect(EvatrApiUpdater.checkAndUpdateAll()).resolves.not.toThrow();
       expect(mockedWriteFileSync).toHaveBeenCalled();
@@ -400,7 +416,9 @@ export const STATUS_MESSAGES: Record<string, ApiStatusMessage> = {};
 
     it('should handle errors in checkAndUpdateAll', async () => {
       // Mock the first API call (checkApiDocsUpdate) to fail with network error
-      (axios.get as jest.MockedFunction<typeof axios.get>).mockRejectedValueOnce(new Error('Network error'));
+      (axios.get as jest.MockedFunction<typeof axios.get>).mockRejectedValueOnce(
+        new Error('Network error')
+      );
 
       await expect(EvatrApiUpdater.checkAndUpdateAll()).rejects.toThrow('Network error');
     });
@@ -413,9 +431,13 @@ export const STATUS_MESSAGES: Record<string, ApiStatusMessage> = {};
       ];
 
       mockedReadFileSync.mockReturnValueOnce(JSON.stringify(statusMessages));
-      mockedReadFileSync.mockReturnValueOnce('export const STATUS_MESSAGES: Record<string, ApiStatusMessage> = {};');
+      mockedReadFileSync.mockReturnValueOnce(
+        'export const STATUS_MESSAGES: Record<string, ApiStatusMessage> = {};'
+      );
 
-      await expect(EvatrApiUpdater.updateConstantsFromFile('/path/to/file.json')).resolves.not.toThrow();
+      await expect(
+        EvatrApiUpdater.updateConstantsFromFile('/path/to/file.json')
+      ).resolves.not.toThrow();
       expect(mockedWriteFileSync).toHaveBeenCalled();
     });
 
@@ -424,7 +446,9 @@ export const STATUS_MESSAGES: Record<string, ApiStatusMessage> = {};
         throw new Error('File not found');
       });
 
-      await expect(EvatrApiUpdater.updateConstantsFromFile('/path/to/file.json')).rejects.toThrow('File not found');
+      await expect(EvatrApiUpdater.updateConstantsFromFile('/path/to/file.json')).rejects.toThrow(
+        'File not found'
+      );
     });
 
     it('should handle JSON parse errors in updateConstantsFromFile', async () => {

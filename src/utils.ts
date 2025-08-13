@@ -22,12 +22,12 @@ export class EvatrUtils {
   static checkVatIdSyntaxForCountry(vatId: string, countryCode?: string): boolean {
     const cleanVatId = this.normalizeVatId(vatId);
     const country = countryCode || cleanVatId.substring(0, 2);
-    
+
     const pattern = VATID_PATTERNS[country];
     if (!pattern) {
       return false;
     }
-    
+
     return pattern.test(cleanVatId);
   }
 
@@ -100,8 +100,8 @@ export class EvatrUtils {
    */
   static getTestVatIds(): Record<string, string> {
     return {
-      'DE': 'DE123456789',
-      'AT': 'ATU12345678',
+      DE: 'DE123456789',
+      AT: 'ATU12345678',
     };
   }
 
@@ -111,12 +111,12 @@ export class EvatrUtils {
    * @param vatIdForeign VAT-ID being validated
    * @returns boolean
    */
-  static canValidate(vatIdOwn: string, vatIdForeign: string): boolean {   
+  static canValidate(vatIdOwn: string, vatIdForeign: string): boolean {
     // Own VAT-ID must be German
     if (!this.isGermanVatId(vatIdOwn)) {
       return false;
     }
-    
+
     // Target VAT-ID must be from an EU member state
     const foreignCountry = this.normalizeVatId(vatIdForeign).substring(0, 2);
     return this.isEUMemberState(foreignCountry);
@@ -126,13 +126,12 @@ export class EvatrUtils {
    * Calculate check digit for German VAT-ID (for validation purposes)
    * @param vatIdNumber Numeric part of German VAT-ID (without DE prefix)
    * @returns number Check digit
-   * @TODO fix
    */
   static calculateGermanVatIdCheckDigit(vatIdNumber: string): number {
     if (vatIdNumber.length !== 9) {
       throw new Error('German VAT-ID number must contain exactly 9 digits after letters DE');
     }
-    
+
     const digits = vatIdNumber.split('').map(Number);
 
     let product = 10;
@@ -140,12 +139,12 @@ export class EvatrUtils {
       const sum = (digits[i] + product) % 10;
       product = (2 * (sum === 0 ? 10 : sum)) % 11;
     }
-    
+
     let checkDigit = 11 - product;
     if (checkDigit === 10) {
       checkDigit = 0;
     }
-    
+
     return checkDigit;
   }
 }

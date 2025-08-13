@@ -45,6 +45,7 @@ describe('TypeScript Types', () => {
   describe('ApiResponse', () => {
     it('should accept valid response', () => {
       const response: Response = {
+        id: 'test-id',
         timestamp: '2025-08-03T20:30:00Z',
         status: 'evatr-0000',
         vatIdOwn: 'DE123456789',
@@ -59,6 +60,7 @@ describe('TypeScript Types', () => {
 
     it('should accept response with validation results', () => {
       const response: Response = {
+        id: 'test-id',
         timestamp: '2025-08-03T20:30:00Z',
         status: 'evatr-0000',
         vatIdOwn: 'DE123456789',
@@ -79,6 +81,7 @@ describe('TypeScript Types', () => {
 
     it('should accept response with validity dates', () => {
       const response: Response = {
+        id: 'test-id',
         timestamp: '2025-08-03T20:30:00Z',
         status: 'evatr-2002',
         vatIdOwn: 'DE123456789',
@@ -151,7 +154,11 @@ describe('TypeScript Types', () => {
     });
 
     it('should only accept valid categories', () => {
-      const validCategories: Array<ApiStatusMessage['kategorie']> = ['Ergebnis', 'Hinweis', 'Fehler'];
+      const validCategories: Array<ApiStatusMessage['kategorie']> = [
+        'Ergebnis',
+        'Hinweis',
+        'Fehler',
+      ];
 
       validCategories.forEach((kategorie) => {
         const statusMessage: ApiStatusMessage = {

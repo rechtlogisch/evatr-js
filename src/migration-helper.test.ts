@@ -5,7 +5,7 @@
 import { EvatrMigrationHelper, ResultType } from './migration-helper';
 import { EvatrClient } from './client';
 import { StatusMessages } from './status-loader';
-import { Response} from './types';
+import { Response } from './types';
 
 // Mock the EvatrClient
 jest.mock('./client');
@@ -31,6 +31,7 @@ describe('EvatrMigrationHelper', () => {
   describe('checkSimple', () => {
     it('should perform simple validation and return expected format', async () => {
       const mockResponse: Response = {
+        id: 'test-id',
         timestamp: '2025-08-06T10:00:00.000Z',
         status: 'evatr-0000',
         vatIdOwn: 'DE123456789',
@@ -65,7 +66,7 @@ describe('EvatrMigrationHelper', () => {
         validUntil: '2025-12-31',
         valid: true,
       });
-      
+
       // Check that time is in HH:MM:SS format
       expect(result.time).toMatch(/^\d{2}:\d{2}:\d{2}$/);
 
@@ -77,6 +78,7 @@ describe('EvatrMigrationHelper', () => {
 
     it('should include raw XML when requested', async () => {
       const mockResponse: Response = {
+        id: 'test-id',
         timestamp: '2025-08-06T10:00:00Z',
         status: 'evatr-0000',
         vatIdOwn: 'DE123456789',
@@ -127,6 +129,7 @@ describe('EvatrMigrationHelper', () => {
   describe('checkQualified', () => {
     it('should perform qualified validation and return expected format', async () => {
       const mockResponse: Response = {
+        id: 'test-id',
         timestamp: '2025-08-06T10:00:00Z',
         status: 'evatr-0000',
         vatIdOwn: 'DE123456789',
@@ -181,7 +184,7 @@ describe('EvatrMigrationHelper', () => {
         resultZipDescription: 'stimmt nicht überein',
         resultStreetDescription: 'nicht angefragt',
       });
-      
+
       // Check that time is in HH:MM:SS format
       expect(result.time).toMatch(/^\d{2}:\d{2}:\d{2}$/);
 

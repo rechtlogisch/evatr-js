@@ -15,12 +15,12 @@ const status_loader_1 = require("./status-loader");
  */
 class EvatrClient {
     constructor(config = {}) {
-        const { timeout = 30000, headers = {}, } = config;
+        const { timeout = 30000, headers = {} } = config;
         this.httpClient = axios_1.default.create({
             timeout,
             headers: {
                 'Content-Type': 'application/json',
-                'Accept': 'application/json',
+                Accept: 'application/json',
                 ...headers,
             },
         });
@@ -64,9 +64,15 @@ class EvatrClient {
     async getStatusMessages() {
         try {
             const response = await this.httpClient.get(constants_1.ENDPOINTS.STATUS_MESSAGES);
-            return response.data.map(apiMsg => ({
+            return response.data.map((apiMsg) => ({
                 status: apiMsg.status,
-                category: apiMsg.kategorie === 'Ergebnis' ? 'Result' : apiMsg.kategorie === 'Fehler' ? 'Error' : apiMsg.kategorie === 'Hinweis' ? 'Hint' : undefined,
+                category: apiMsg.kategorie === 'Ergebnis'
+                    ? 'Result'
+                    : apiMsg.kategorie === 'Fehler'
+                        ? 'Error'
+                        : apiMsg.kategorie === 'Hinweis'
+                            ? 'Hint'
+                            : undefined,
                 http: apiMsg.httpcode,
                 message: apiMsg.meldung,
                 field: apiMsg.feld,
@@ -83,7 +89,7 @@ class EvatrClient {
     async getEUMemberStates() {
         try {
             const response = await this.httpClient.get(constants_1.ENDPOINTS.EU_MEMBER_STATES);
-            return response.data.map(apiState => ({
+            return response.data.map((apiState) => ({
                 code: apiState.alpha2,
                 available: apiState.verfuegbar,
             }));
@@ -179,6 +185,7 @@ class EvatrClient {
      */
     mapFromApiResponse(response, vatIdOwn, vatIdForeign) {
         return {
+            id: response.id,
             timestamp: response.anfrageZeitpunkt,
             status: response.status,
             vatIdOwn,
@@ -197,6 +204,7 @@ class EvatrClient {
     mapToExtendedResponse(response) {
         const statusMessage = this.getStatusMessage(response.status);
         return {
+            id: response.id,
             timestamp: new Date(response.timestamp),
             valid: this.isSuccessStatus(response.status),
             status: response.status,
@@ -243,7 +251,7 @@ class EvatrClient {
             if (request.includeRaw === true) {
                 const rawData = {
                     headers: response.headers,
-                    data: response.data
+                    data: response.data,
                 };
                 basicResponse.raw = JSON.stringify(rawData);
             }

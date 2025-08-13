@@ -1,6 +1,6 @@
 {
   "name": "evatr-api",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Checks a VAT-ID using the eVatR REST-API of the German Federal Central Tax Office (Bundeszentralamt für Steuern, BZSt)",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -29,6 +29,7 @@
     "test:watch": "jest --watch",
     "test": "jest --testPathIgnorePatterns='/*.external.test.ts'",
     "type:check": "tsc --noEmit",
+    "quality": "npm run update:api check && npm run test:smoke && npm run format:check && npm run lint && npm run type:check && npm run test && npm run test:external && npm run test:coverage",
     "update:api": "ts-node scripts/update-api.ts"
   },
   "keywords": [

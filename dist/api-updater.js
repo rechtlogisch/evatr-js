@@ -46,7 +46,7 @@ class EvatrApiUpdater {
                 hasUpdate,
                 currentVersion,
                 latestVersion,
-                downloadUrl: this.API_DOCS_URL
+                downloadUrl: this.API_DOCS_URL,
             };
         }
         catch (error) {
@@ -68,10 +68,8 @@ class EvatrApiUpdater {
             const filename = `api-docs-${version}-${timestamp}.json`;
             const filepath = (0, path_1.join)(this.DOCS_DIR, filename);
             (0, fs_1.writeFileSync)(filepath, JSON.stringify(apiDocs, null, 2));
-            // Also update the main api-docs.json file
-            const mainFilepath = (0, path_1.join)(this.DOCS_DIR, 'api-docs.json');
-            (0, fs_1.writeFileSync)(mainFilepath, JSON.stringify(apiDocs, null, 2));
-            console.log(`✅ API documentation saved to: ${filename}`);
+            console.log(`💾 API documentation saved to: ${filename}`);
+            console.log(`🚧 Please review api-docs manually for any relevant changes.`);
             return filepath;
         }
         catch (error) {
@@ -107,7 +105,7 @@ class EvatrApiUpdater {
                 currentVersion: `${currentMessages.length} messages`,
                 latestVersion: `${latestMessages.length} messages`,
                 downloadUrl: constants_1.ENDPOINTS.STATUS_MESSAGES,
-                diff
+                diff,
             };
         }
         catch (error) {
@@ -143,8 +141,8 @@ class EvatrApiUpdater {
      * Compare two sets of status messages and return differences
      */
     static compareStatusMessages(current, latest) {
-        const currentMap = new Map(current.map(msg => [msg.status, msg]));
-        const latestMap = new Map(latest.map(msg => [msg.status, msg]));
+        const currentMap = new Map(current.map((msg) => [msg.status, msg]));
+        const latestMap = new Map(latest.map((msg) => [msg.status, msg]));
         const added = [];
         const removed = [];
         const modified = [];
@@ -173,13 +171,13 @@ class EvatrApiUpdater {
         console.log('\n=== Status Messages Differences ===');
         if (diff.added.length > 0) {
             console.log(`\n➕ Added (${diff.added.length}):`);
-            diff.added.forEach(msg => {
+            diff.added.forEach((msg) => {
                 console.log(`  ${msg.status}: ${msg.meldung}`);
             });
         }
         if (diff.removed.length > 0) {
             console.log(`\n➖ Removed (${diff.removed.length}):`);
-            diff.removed.forEach(msg => {
+            diff.removed.forEach((msg) => {
                 console.log(`  ${msg.status}: ${msg.meldung}`);
             });
         }
@@ -210,9 +208,7 @@ class EvatrApiUpdater {
             const constantsPath = './src/constants.ts';
             const constantsContent = (0, fs_1.readFileSync)(constantsPath, 'utf8');
             // Replace the STATUS_MESSAGES object
-            const statusMessagesStr = JSON.stringify(statusMessagesObj, null, 2)
-                .replace(/"/g, "'")
-                .replace(/'/g, "'");
+            const statusMessagesStr = JSON.stringify(statusMessagesObj, null, 2).replace(/"/g, "'");
             const newConstantsContent = constantsContent.replace(/export const STATUS_MESSAGES: Record<string, ApiStatusMessage> = \{[\s\S]*?\};/, `export const STATUS_MESSAGES: Record<string, StatusMessage> = ${statusMessagesStr};`);
             (0, fs_1.writeFileSync)(constantsPath, newConstantsContent);
             console.log('✅ Constants file updated');
@@ -231,11 +227,11 @@ class EvatrApiUpdater {
             // Check API docs
             const apiDocsResult = await this.checkApiDocsUpdate();
             if (apiDocsResult.hasUpdate) {
-                console.log(`📄 API Docs update available: ${apiDocsResult.currentVersion} → ${apiDocsResult.latestVersion}`);
+                console.log(`🔄 API docs update available: ${apiDocsResult.currentVersion} → ${apiDocsResult.latestVersion}`);
                 await this.downloadApiDocs();
             }
             else {
-                console.log('📄 API Docs are up to date');
+                console.log('📄 API docs are up to date');
             }
             // Check status messages
             const statusResult = await this.checkStatusMessagesUpdate();
@@ -263,7 +259,7 @@ class EvatrApiUpdater {
     static async updateConstantsFromFile(filepath) {
         try {
             const apiStatusMessages = JSON.parse((0, fs_1.readFileSync)(filepath, 'utf8'));
-            const statusMessages = apiStatusMessages.map(msg => ({
+            const statusMessages = apiStatusMessages.map((msg) => ({
                 status: msg.status,
                 message: msg.meldung,
                 category: msg.kategorie === 'Ergebnis' ? 'Result' : msg.kategorie === 'Fehler' ? 'Error' : 'Hint',

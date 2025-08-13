@@ -25,11 +25,14 @@ describe('EvatrClient External Tests', () => {
       });
 
       expect(result).toBeDefined();
+      // Should include id
+      expect(result.id).toBeDefined();
+      expect(typeof result.id).toBe('string');
       expect(result.timestamp).toBeDefined();
       expect(result.status).toBeDefined();
       expect(typeof result.status).toBe('string');
       expect(result.status).toMatch(/^evatr-\d{4}$/); // Status format: evatr-XXXX
-      
+
       // Should have timestamp in ISO format
       expect(result.timestamp).toMatch(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/);
     }, 30000);
@@ -60,6 +63,8 @@ describe('EvatrClient External Tests', () => {
       });
 
       expect(result).toBeDefined();
+      expect(result.id).toBeDefined();
+      expect(typeof result.id).toBe('string');
       expect(result.status).toBeDefined();
     }, 30000);
   });
@@ -76,11 +81,14 @@ describe('EvatrClient External Tests', () => {
       });
 
       expect(result).toBeDefined();
+      // Should include id
+      expect(result.id).toBeDefined();
+      expect(typeof result.id).toBe('string');
       expect(result.timestamp).toBeDefined();
       expect(result.status).toBeDefined();
       expect(typeof result.status).toBe('string');
       expect(result.status).toMatch(/^evatr-\d{4}$/);
-      
+
       // Qualified validation may return company data
       if (result.company !== undefined) {
         expect(typeof result.company).toBe('string');
@@ -137,10 +145,10 @@ describe('EvatrClient External Tests', () => {
 
       // Status should match evatr-XXXX format
       expect(firstMessage.status).toMatch(/^evatr-\d{4}$/);
-      
+
       // Category should be one of the expected values
       expect(['Result', 'Error', 'Hint']).toContain(firstMessage.category);
-      
+
       // HTTP status should be a valid HTTP status code
       expect(firstMessage.http).toBeGreaterThanOrEqual(200);
       expect(firstMessage.http).toBeLessThan(600);
@@ -148,19 +156,19 @@ describe('EvatrClient External Tests', () => {
 
     it('should return status messages with expected content', async () => {
       const result = await client.getStatusMessages();
-      
+
       // Should contain the success status
-      const successMessage = result.find(msg => msg.status === 'evatr-0000');
+      const successMessage = result.find((msg) => msg.status === 'evatr-0000');
       expect(successMessage).toBeDefined();
       expect(successMessage?.category).toBe('Result');
       expect(successMessage?.http).toBe(200);
 
       // Should contain some error statuses
-      const errorMessages = result.filter(msg => msg.category === 'Error');
+      const errorMessages = result.filter((msg) => msg.category === 'Error');
       expect(errorMessages.length).toBeGreaterThan(0);
 
       // Should contain some hint statuses
-      const hintMessages = result.filter(msg => msg.category === 'Hint');
+      const hintMessages = result.filter((msg) => msg.category === 'Hint');
       expect(hintMessages.length).toBeGreaterThan(0);
     }, 30000);
   });
@@ -185,21 +193,21 @@ describe('EvatrClient External Tests', () => {
 
     it('should return expected EU member states', async () => {
       const result = await client.getEUMemberStates();
-      
+
       // Should contain Germany
-      const germany = result.find(state => state.code === 'DE');
+      const germany = result.find((state) => state.code === 'DE');
       expect(germany).toBeDefined();
-      
+
       // Should contain Austria
-      const austria = result.find(state => state.code === 'AT');
+      const austria = result.find((state) => state.code === 'AT');
       expect(austria).toBeDefined();
-      
+
       // Should contain France
-      const france = result.find(state => state.code === 'FR');
+      const france = result.find((state) => state.code === 'FR');
       expect(france).toBeDefined();
 
       // All states should have valid structure
-      result.forEach(state => {
+      result.forEach((state) => {
         expect(state.code).toMatch(/^[A-Z]{2}$/);
         expect(typeof state.available).toBe('boolean');
       });
@@ -207,9 +215,9 @@ describe('EvatrClient External Tests', () => {
 
     it('should return states with availability information', async () => {
       const result = await client.getEUMemberStates();
-      
+
       // At least some states should be available
-      const availableStates = result.filter(state => state.available === true);
+      const availableStates = result.filter((state) => state.available === true);
       expect(availableStates.length).toBeGreaterThan(0);
     }, 30000);
   });
@@ -236,11 +244,11 @@ describe('EvatrClient External Tests', () => {
           vatIdOwn: 'DE123456789',
           vatIdForeign: 'DE123456789', // Same as own - might trigger specific error
         });
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (error: any) {
         expect(error).toBeDefined();
         expect(error.name).toBe('EvatrApiError');
-        
+
         // Should have at least a message
         expect(typeof error.message).toBe('string');
         expect(error.message.length).toBeGreaterThan(0);
@@ -257,6 +265,7 @@ describe('EvatrClient External Tests', () => {
 
       // Validate response structure matches our types
       expect(validationResult).toMatchObject({
+        id: expect.any(String),
         timestamp: expect.stringMatching(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/),
         status: expect.stringMatching(/^evatr-\d{4}$/),
       });
@@ -275,7 +284,7 @@ describe('EvatrClient External Tests', () => {
 
     it('should validate status messages API response structure', async () => {
       const statusMessages = await client.getStatusMessages();
-      
+
       // Validate each message has required structure
       statusMessages.forEach((message: StatusMessage) => {
         expect(message).toMatchObject({
@@ -298,7 +307,7 @@ describe('EvatrClient External Tests', () => {
 
     it('should validate EU member states API response structure', async () => {
       const memberStates = await client.getEUMemberStates();
-      
+
       // Validate each state has required structure
       memberStates.forEach((state: EUMemberState) => {
         expect(state).toMatchObject({
