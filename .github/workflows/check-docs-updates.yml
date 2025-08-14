@@ -1,4 +1,4 @@
-name: Check API Updates
+name: Check Docs Updates
 
 on:
   schedule:
@@ -7,7 +7,7 @@ on:
   workflow_dispatch: # Allow manual triggering
 
 jobs:
-  check-api-updates:
+  check-docs-updates:
     runs-on: ubuntu-latest
     
     steps:
@@ -23,7 +23,7 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Cache API files and checksums
+      - name: Cache docs files and checksums
         uses: actions/cache@v4
         id: docs-cache
         with:
@@ -31,17 +31,17 @@ jobs:
             docs/api-docs.json
             docs/statusmeldungen.json
             docs/checksums.txt
-          key: docs-cache-v2
-          restore-keys: docs-cache-v2
+          key: docs-cache-v3
+          restore-keys: docs-cache-v3
 
-      - name: Download and check API files
+      - name: Download and check docs files
         id: check-changes
         run: |
           set -euo pipefail
           DIR="docs"
           mkdir -p "$DIR"
 
-          echo "Downloading API files..."
+          echo "Downloading docs files..."
           
           # Download API docs
           curl -s -o "$DIR/api-docs.new.json" https://api.evatr.vies.bzst.de/api-docs
@@ -49,19 +49,19 @@ jobs:
           # Download status messages
           curl -s -o "$DIR/statusmeldungen.new.json" https://api.evatr.vies.bzst.de/v1/info/statusmeldungen
           
-          # Calculate new checksums
-          api_checksum=$(sha256sum "$DIR/api-docs.new.json" | cut -d' ' -f1)
+          # Extract API version and compute status checksum
+          api_version=$(node -pe "try{(JSON.parse(require('fs').readFileSync('$DIR/api-docs.new.json','utf8')).info||{}).version||''}catch(e){''}")
           status_checksum=$(sha256sum "$DIR/statusmeldungen.new.json" | cut -d' ' -f1)
           
-          echo "api-docs:$api_checksum" > "$DIR/checksums.new.txt"
+          echo "api_version:$api_version" > "$DIR/checksums.new.txt"
           echo "statusmeldungen:$status_checksum" >> "$DIR/checksums.new.txt"
           
-          echo "New checksums:"
+          echo "New versions/checksums:"
           cat "$DIR/checksums.new.txt"
           
-          # Compare with previous checksums
+          # Compare with previous versions/checksums
           if [ -f "$DIR/checksums.txt" ]; then
-          echo "Previous checksums:"
+          echo "Previous versions/checksums:"
           cat "$DIR/checksums.txt"
           
           if cmp -s "$DIR/checksums.txt" "$DIR/checksums.new.txt"; then
@@ -88,7 +88,7 @@ jobs:
           mv "$DIR/checksums.new.txt" "$DIR/checksums.txt"
           fi
 
-      - name: Run API update if changes detected
+      - name: Run docs update if changes detected
         if: steps.check-changes.outputs.changes_detected == 'true'
         run: |
           echo "Running npm run update:api due to detected changes..."
@@ -102,17 +102,17 @@ jobs:
             docs/api-docs.json
             docs/statusmeldungen.json
             docs/checksums.txt
-          key: docs-cache-v2
+          key: docs-cache-v3
 
       - name: Fail workflow if changes detected
         if: steps.check-changes.outputs.changes_detected == 'true'
         run: |
-          echo "❌ API changes detected! Failing workflow for notification."
+          echo "❌ Docs changes detected! Failing workflow for notification."
           echo "📄 Check the logs above for details about what changed."
-          echo "🔧 The API has been updated - please review the changes."
+          echo "🔧 The docs have been updated - please review the changes."
           exit 1
 
       - name: Success notification
         if: steps.check-changes.outputs.changes_detected == 'false'
         run: |
-          echo "✅ No API changes detected. Everything is up to date!"
+          echo "✅ No docs changes detected. Everything is up to date!"
