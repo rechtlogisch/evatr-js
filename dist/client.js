@@ -206,7 +206,10 @@ class EvatrClient {
         const statusMessage = this.getStatusMessage(response.status);
         return {
             id: response.id,
-            timestamp: new Date(response.timestamp),
+            timestamp: {
+                original: response.timestamp,
+                date: new Date(response.timestamp),
+            },
             valid: this.isSuccessStatus(response.status),
             status: response.status,
             message: statusMessage?.message || undefined,

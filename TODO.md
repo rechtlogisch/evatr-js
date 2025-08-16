@@ -1,4 +1,3 @@
-- [ ] ExtendedResponse should return original timestamp as string, and additionally Date object (in timestamp object with keys: original and date)
 - [ ] Refactor status-loader
     - [ ] Remove caching mechanism
     - [ ] Rename to status

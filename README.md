@@ -188,12 +188,12 @@ The API uses German terms, which have been mapped to the following English param
 
 #### Extended Response
 
-By passing `true` as the second parameter to function `validateSimple({...}, true)` or `validateQualified({...}, true)` an `ExtendedResponse` object is being returned, which maps date string to date objects and returns `valid` and `message` keys:
+By passing `true` as the second parameter to function `validateSimple({...}, true)` or `validateQualified({...}, true)` an `ExtendedResponse` object is returned. It maps date strings to Date objects, adds convenience fields `valid` and `message`, and provides a `timestamp` object with both the original string and a parsed Date:
 
 ```typescript
 interface ExtendedResponse {
   id: string;                      // Technical request ID returned by the API, related to the request
-  timestamp: Date;                 // Date object
+  timestamp: Timestamp;            // Timestamp object with original string and Date object
   valid: boolean;                  // true if isSuccessStatus()
   status: string;
   message?: string;                // German description for the status

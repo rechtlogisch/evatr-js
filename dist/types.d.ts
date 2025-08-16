@@ -78,9 +78,13 @@ export interface Response {
     location?: QualifiedResultCode;
     raw?: string;
 }
+export interface Timestamp {
+    original: string;
+    date: Date;
+}
 export interface ExtendedResponse {
     id: string;
-    timestamp: Date;
+    timestamp: Timestamp;
     valid: boolean;
     status: string;
     message?: string;
