@@ -506,7 +506,7 @@ describe('EvatrClient', () => {
       const mockResponse = {
         data: {
           id: 'test-id',
-          anfrageZeitpunkt: '2025-08-03T20:30:00Z',
+          anfrageZeitpunkt: '2025-08-13T15:41:40.645578012+02:00',
           status: 'evatr-0000',
           gueltigAb: '2025-01-01',
           gueltigBis: '2025-12-31',
@@ -539,7 +539,9 @@ describe('EvatrClient', () => {
       expect(result.valid).toBe(true);
       expect(result.message).toBe('Valid');
       expect(result.id).toBe('test-id');
-      expect(result.timestamp).toBeInstanceOf(Date);
+      expect(result.timestamp).toBeDefined();
+      expect(result.timestamp.original).toBe('2025-08-13T15:41:40.645578012+02:00');
+      expect(result.timestamp.date).toBeInstanceOf(Date);
       expect(result.validFrom).toBeInstanceOf(Date);
       expect(result.validTill).toBeInstanceOf(Date);
     });
@@ -585,7 +587,7 @@ describe('EvatrClient', () => {
       expect(result.valid).toBe(true);
       expect(result.message).toBe('Valid');
       expect(result.id).toBe('test-id');
-      expect(result.timestamp).toBeInstanceOf(Date);
+      expect(typeof result.timestamp).toBe('object');
       expect(result.validFrom).toBeInstanceOf(Date);
       expect(result.validTill).toBeInstanceOf(Date);
       expect(result.raw).toBeDefined();

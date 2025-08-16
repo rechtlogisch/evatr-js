@@ -11,7 +11,8 @@ async function extendedResponseExample(): Promise<void> {
       vatIdForeign: 'ATU12345678'
     }, true);
 
-    console.log('Query time:', simpleResult.timestamp);
+    console.log('Query time (original):', simpleResult.timestamp.original);
+    console.log('Query time (date):', simpleResult.timestamp.date.toISOString());
     console.log('Is valid:', simpleResult.valid);
     console.log('Status:', simpleResult.status);
     console.log('Message:', simpleResult.message);
