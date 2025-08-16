@@ -49,7 +49,7 @@ const result = await client.validateQualified({
   vatIdOwn: 'DE123456789',
   vatIdForeign: 'ATU12345678',
   company: 'Musterhaus GmbH & Co KG',
-  location: 'musterort'
+  location: 'Musterort'
 });
 
 console.log(result);
@@ -109,7 +109,7 @@ await client.validateQualified({
   vatIdOwn: 'DE123456789',            // Your German VAT-ID (required)
   vatIdForeign: 'ATU12345678',        // VAT-ID to validate (required)
   company: 'Musterhaus GmbH & Co KG', // Company name (required)
-  location: 'musterort',              // City (required)
+  location: 'Musterort',              // City (required)
   street: 'Musterstrasse 22',         // Street address (optional)
   zip: '12345',                       // Postal code (optional)
   includeRaw: true,                   // Include raw response (optional)
@@ -274,7 +274,7 @@ const qualifiedResult = await evatr.checkQualified({
   companyName: 'Musterhaus GmbH & Co KG',
   street: 'Musterstrasse 22',
   zip: '12345',
-  city: 'musterort',
+  city: 'Musterort',
 });
 ```
 
@@ -412,7 +412,7 @@ const qualifiedTestRequest = {
   firmenname: 'Musterhaus GmbH & Co KG',
   strasse: 'Musterstrasse 22',
   plz: '12345',
-  ort: 'musterort',
+  ort: 'Musterort',
 };
 ```
 

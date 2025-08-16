@@ -155,7 +155,7 @@ describe('EvatrMigrationHelper', () => {
         ownVatNumber: 'DE123456789',
         validateVatNumber: 'ATU12345678',
         companyName: 'Musterhaus GmbH & Co KG',
-        city: 'musterort',
+        city: 'Musterort',
         zip: '12345',
         street: 'Musterstrasse 22',
       };
@@ -172,7 +172,7 @@ describe('EvatrMigrationHelper', () => {
         validUntil: '2025-12-31',
         valid: true,
         companyName: 'Musterhaus GmbH & Co KG',
-        city: 'musterort',
+        city: 'Musterort',
         zip: '12345',
         street: 'Musterstrasse 22',
         resultName: ResultType.MATCH,
@@ -192,7 +192,7 @@ describe('EvatrMigrationHelper', () => {
         vatIdOwn: 'DE123456789',
         vatIdForeign: 'ATU12345678',
         company: 'Musterhaus GmbH & Co KG',
-        location: 'musterort',
+        location: 'Musterort',
         street: 'Musterstrasse 22',
         zip: '12345',
       });
@@ -209,7 +209,7 @@ describe('EvatrMigrationHelper', () => {
         ownVatNumber: 'DE123456789',
         validateVatNumber: 'ATU12345678',
         companyName: 'Musterhaus GmbH & Co KG',
-        city: 'musterort',
+        city: 'Musterort',
       };
 
       const result = await EvatrMigrationHelper.checkQualified(params);
@@ -218,7 +218,7 @@ describe('EvatrMigrationHelper', () => {
       expect(result.errorCode).toBe(400);
       expect(result.errorDescription).toBe('Validation error');
       expect(result.companyName).toBe('Musterhaus GmbH & Co KG');
-      expect(result.city).toBe('musterort');
+      expect(result.city).toBe('Musterort');
     });
   });
 

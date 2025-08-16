@@ -10,7 +10,7 @@ async function migrationExample(): Promise<void> {
     ownVatNumber: 'DE123456789',
     validateVatNumber: 'ATU12345678',
     companyName: 'Musterhaus GmbH & Co KG',
-    city: 'musterort',
+    city: 'Musterort',
     zip: '12345',
     street: 'Musterstrasse 22',
   });

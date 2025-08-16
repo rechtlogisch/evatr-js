@@ -240,7 +240,7 @@ describe('EvatrClient', () => {
         vatIdOwn: 'DE123456789',
         vatIdForeign: 'ATU12345678',
         company: 'Musterhaus GmbH & Co KG',
-        location: 'musterort',
+        location: 'Musterort',
         street: 'Musterstrasse 22',
         zip: '12345',
       });
@@ -249,7 +249,7 @@ describe('EvatrClient', () => {
         anfragendeUstid: 'DE123456789',
         angefragteUstid: 'ATU12345678',
         firmenname: 'Musterhaus GmbH & Co KG',
-        ort: 'musterort',
+        ort: 'Musterort',
         strasse: 'Musterstrasse 22',
         plz: '12345',
       });

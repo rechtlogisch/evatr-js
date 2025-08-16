@@ -10,7 +10,7 @@ async function qualifiedExample(): Promise<void> {
       vatIdOwn: 'DE123456789',
       vatIdForeign: 'ATU12345678',
       company: 'Musterhaus GmbH & Co KG',
-      location: 'musterort',
+      location: 'Musterort',
       street: 'Musterstrasse 22',
       zip: '12345',
       // includeRaw: true,
