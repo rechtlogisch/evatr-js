@@ -37,14 +37,14 @@ jobs:
       run: npm run build
 
     - name: Upload coverage reports to Codecov
-      if: matrix.node-version == '22.x'
+      if: matrix.node-version == '22.x' && github.ref == 'refs/heads/main'
       uses: codecov/codecov-action@v5
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
         fail_ci_if_error: true
 
     - name: Upload test results to Codecov
-      if: matrix.node-version == '22.x'
+      if: matrix.node-version == '22.x' && github.ref == 'refs/heads/main'
       uses: codecov/test-results-action@v1
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
