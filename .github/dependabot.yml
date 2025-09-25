@@ -12,6 +12,13 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
+    pull-requests:
+      default-branch: "main"
+      auto-merge: true
+      auto-merge-strategy: "squash"
+    allow:
+    - dependency-type: "direct"
+      update-type: "security"
     open-pull-requests-limit: 10
     commit-message:
       prefix: "chore"
@@ -36,6 +43,13 @@ updates:
           - "prettier*"
           - "typescript"
           - "ts-*"
+        update-types:
+          - "minor"
+          - "patch"
+      testing-tools:
+        patterns:
+          - "jest*"
+          - "@types/jest"
         update-types:
           - "minor"
           - "patch"
