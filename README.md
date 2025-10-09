@@ -402,17 +402,17 @@ The library includes test VAT-IDs and information that can be used for testing. 
 
 ```typescript
 const testRequest = {
-  anfragendeUstid: 'DE123456789',
-  angefragteUstid: 'ATU12345678',
+  vatIdOwn: 'DE123456789',
+  vatIdForeign: 'ATU12345678',
 };
 
 const qualifiedTestRequest = {
-  anfragendeUstid: 'DE123456789',
-  angefragteUstid: 'ATU12345678',
-  firmenname: 'Musterhaus GmbH & Co KG',
-  strasse: 'Musterstrasse 22',
-  plz: '12345',
-  ort: 'Musterort',
+  vatIdOwn: 'DE123456789',
+  vatIdForeign: 'ATU12345678',
+  company: 'Musterhaus GmbH & Co KG',
+  location: 'Musterort',
+  street: 'Musterstrasse 22',
+  zip: '12345',
 };
 ```
 
