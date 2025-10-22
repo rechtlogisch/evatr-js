@@ -31,8 +31,9 @@ jobs:
             docs/api-docs.json
             docs/statusmeldungen.json
             docs/checksums.txt
-          key: docs-cache-v3
-          restore-keys: docs-cache-v3
+          key: docs-cache-v4-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            docs-cache-v4-
 
       - name: Download and check docs files
         id: check-changes
@@ -94,15 +95,6 @@ jobs:
           echo "Running npm run update:api due to detected changes..."
           npm run update:api check
 
-      - name: Save cache
-        if: steps.check-changes.outputs.changes_detected == 'true'
-        uses: actions/cache/save@v4
-        with:
-          path: |
-            docs/api-docs.json
-            docs/statusmeldungen.json
-            docs/checksums.txt
-          key: docs-cache-v3
 
       - name: Fail workflow if changes detected
         if: steps.check-changes.outputs.changes_detected == 'true'
