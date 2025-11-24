@@ -23,15 +23,15 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Cache docs files and checksums
-        uses: actions/cache@v4
+      - name: Restore docs cache
+        uses: actions/cache/restore@v4
         id: docs-cache
         with:
           path: |
             docs/api-docs.json
             docs/statusmeldungen.json
             docs/checksums.txt
-          key: docs-cache-v4
+          key: docs-cache-v4-${{ github.run_id }}
           restore-keys: |
             docs-cache-v4-
 
@@ -60,6 +60,10 @@ jobs:
           echo "New versions/checksums:"
           cat "$DIR/checksums.new.txt"
           
+          # Generate cache key from new checksums
+          cache_key_hash=$(sha256sum "$DIR/checksums.new.txt" | cut -d' ' -f1 | cut -c1-12)
+          echo "cache_key=docs-cache-v4-${cache_key_hash}" >> $GITHUB_OUTPUT
+
           # Compare with previous versions/checksums
           if [ -f "$DIR/checksums.txt" ]; then
           echo "Previous versions/checksums:"
@@ -103,7 +107,7 @@ jobs:
             docs/api-docs.json
             docs/statusmeldungen.json
             docs/checksums.txt
-          key: docs-cache-v4
+          key: ${{ steps.check-changes.outputs.cache_key }}
 
       - name: Fail workflow if changes detected
         if: steps.check-changes.outputs.changes_detected == 'true'
