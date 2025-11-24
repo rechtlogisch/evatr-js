@@ -3,6 +3,13 @@ name: Tests
 on:
   push:
     branches: [ main ]
+    paths:
+      - '**.ts'
+      - '**.js'
+      - '.github/workflows/run-tests.yml'
+      - 'package.json'
+      - 'package-lock.json'
+      - 'tsconfig.json'
   pull_request:
     branches: [ main ]
 
