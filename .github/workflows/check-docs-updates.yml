@@ -31,9 +31,9 @@ jobs:
             docs/api-docs.json
             docs/statusmeldungen.json
             docs/checksums.txt
-          key: docs-cache-v4-${{ github.run_id }}
+          key: docs-cache-v5-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
-            docs-cache-v4-
+            docs-cache-v5-
 
       - name: Download and check docs files
         id: check-changes
@@ -52,6 +52,15 @@ jobs:
           
           # Extract API version and compute status checksum
           api_version=$(node -pe "try{(JSON.parse(require('fs').readFileSync('$DIR/api-docs.new.json','utf8')).info||{}).version||''}catch(e){''}")
+          
+          # Validate API version was extracted
+          if [ -z "$api_version" ]; then
+            echo "⚠️ Warning: Failed to extract API version. Checking downloaded file..."
+            head -20 "$DIR/api-docs.new.json" || true
+            echo "Setting api_version to 'unknown' to force cache refresh"
+            api_version="unknown"
+          fi
+          
           status_checksum=$(sha256sum "$DIR/statusmeldungen.new.json" | cut -d' ' -f1)
           
           echo "api_version:$api_version" > "$DIR/checksums.new.txt"
@@ -62,7 +71,7 @@ jobs:
           
           # Generate cache key from new checksums
           cache_key_hash=$(sha256sum "$DIR/checksums.new.txt" | cut -d' ' -f1 | cut -c1-12)
-          echo "cache_key=docs-cache-v4-${cache_key_hash}" >> $GITHUB_OUTPUT
+          echo "cache_key=docs-cache-v5-${cache_key_hash}" >> $GITHUB_OUTPUT
 
           # Compare with previous versions/checksums
           if [ -f "$DIR/checksums.txt" ]; then
