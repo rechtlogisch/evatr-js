@@ -24,7 +24,7 @@ jobs:
         run: npm ci
 
       - name: Restore docs cache
-        uses: actions/cache/restore@v4
+        uses: actions/cache/restore@v5
         id: docs-cache
         with:
           path: |
@@ -110,7 +110,7 @@ jobs:
 
       - name: Save cache after changes
         if: steps.check-changes.outputs.changes_detected == 'true'
-        uses: actions/cache/save@v4
+        uses: actions/cache/save@v5
         with:
           path: |
             docs/api-docs.json
