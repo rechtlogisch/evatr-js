@@ -17,12 +17,23 @@ jest.mock('./status-loader');
 const mockedStatusMessages = StatusMessages as jest.Mocked<typeof StatusMessages>;
 
 // Create a mock axios instance
+let errorInterceptorCallback: ((error: any) => any) | null = null;
+let successInterceptorCallback: ((response: any) => any) | null = null;
 const mockAxiosInstance = {
   post: jest.fn(),
   get: jest.fn(),
   interceptors: {
     response: {
-      use: jest.fn(),
+      use: jest.fn((onFulfilled, onRejected) => {
+        // Store the interceptor callbacks so we can invoke them
+        if (onFulfilled) {
+          successInterceptorCallback = onFulfilled;
+        }
+        if (onRejected) {
+          errorInterceptorCallback = onRejected;
+        }
+        return 0; // Return an interceptor ID
+      }),
     },
   },
 };
@@ -34,6 +45,9 @@ describe('EvatrClient', () => {
     // Setup axios.create mock to return our mock instance
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     mockedAxios.create.mockReturnValue(mockAxiosInstance as any);
+    // Reset the interceptor callbacks
+    errorInterceptorCallback = null;
+    successInterceptorCallback = null;
 
     client = new EvatrClient();
     jest.clearAllMocks();
@@ -78,6 +92,76 @@ describe('EvatrClient', () => {
       mockAxiosInstance.get.mockRejectedValue(evatrError);
 
       await expect(client.getAvailability()).rejects.toBe(evatrError);
+    });
+
+    it('should use error.response.data.message when available in interceptor', async () => {
+      // Test the interceptor branch: error.response?.data?.message || error.message || 'Unknown error'
+      // This tests line 47 where error.response?.data?.message is the first branch
+      // The interceptor is set up in the constructor and will be invoked when axios rejects
+      const error: any = {
+        response: {
+          status: 400,
+          data: { message: 'Response data message' },
+        },
+        message: 'Error message',
+      };
+
+      // Ensure interceptor callback is available
+      expect(errorInterceptorCallback).not.toBeNull();
+
+      // Mock get to reject with error
+      // The interceptor will be invoked automatically by axios, but since we're mocking,
+      // we need to manually invoke it to test the branch
+      mockAxiosInstance.get.mockImplementation(() => {
+        // Simulate what axios would do - invoke the interceptor on rejection
+        const rejectedPromise = Promise.reject(error);
+        if (errorInterceptorCallback) {
+          return rejectedPromise.catch((err) => {
+            // Invoke the interceptor callback (this simulates axios behavior)
+            throw errorInterceptorCallback!(err);
+          });
+        }
+        return rejectedPromise;
+      });
+
+      const rejection = await client.getAvailability().catch((e) => e);
+      expect(rejection.name).toBe('EvatrApiError');
+      // The interceptor should use error.response.data.message when available (line 47)
+      expect(rejection.message).toBe('Response data message');
+      expect(rejection.http).toBe(400);
+    });
+
+    it('should use error.response.data.message when available', async () => {
+      // Test handleError branch: error.message || 'Unknown error occurred'
+      // When error has a message, it should be used
+      const error: any = {
+        message: 'Custom error message',
+        response: {
+          status: 400,
+          data: { message: 'Response message' },
+        },
+      };
+      mockAxiosInstance.get.mockRejectedValue(error);
+
+      const rejection = await client.getAvailability().catch((e) => e);
+      expect(rejection.name).toBe('EvatrApiError');
+      // handleError uses error.message, not error.response.data.message
+      expect(rejection.message).toBe('Custom error message');
+    });
+
+    it('should handle error without message property in performValidation', async () => {
+      const errorWithoutMessage = {};
+      mockAxiosInstance.post.mockRejectedValue(errorWithoutMessage);
+
+      await expect(
+        client.validateSimple({
+          vatIdOwn: 'DE123456789',
+          vatIdForeign: 'ATU12345678',
+        })
+      ).rejects.toMatchObject({
+        name: 'EvatrApiError',
+        message: 'Unknown error occurred',
+      });
     });
   });
 
@@ -217,6 +301,58 @@ describe('EvatrClient', () => {
         vatIdForeign: 'ATU12345678',
       });
       expect(result2.raw).toBeUndefined();
+    });
+  });
+
+  describe('validate', () => {
+    it('should perform validation with full request object', async () => {
+      const mockResponse = {
+        data: {
+          id: 'test-id',
+          anfrageZeitpunkt: '2025-08-03T20:30:00Z',
+          status: 'evatr-0000',
+        },
+      };
+
+      mockAxiosInstance.post.mockResolvedValue(mockResponse);
+
+      const result = await client.validate({
+        vatIdOwn: 'DE123456789',
+        vatIdForeign: 'ATU12345678',
+      });
+
+      expect(result.status).toBe('evatr-0000');
+      expect(result.id).toBe('test-id');
+    });
+
+    it('should perform validation with extended response', async () => {
+      const mockResponse = {
+        data: {
+          id: 'test-id',
+          anfrageZeitpunkt: '2025-08-03T20:30:00Z',
+          status: 'evatr-0000',
+        },
+      };
+
+      mockAxiosInstance.post.mockResolvedValue(mockResponse);
+      mockedStatusMessages.getStatusMessage.mockReturnValue({
+        status: 'evatr-0000',
+        category: 'Result',
+        http: 200,
+        message: 'Valid',
+      });
+      mockedStatusMessages.isSuccessStatus.mockReturnValue(true);
+
+      const result = await client.validate(
+        {
+          vatIdOwn: 'DE123456789',
+          vatIdForeign: 'ATU12345678',
+        },
+        true
+      );
+
+      expect(result.status).toBe('evatr-0000');
+      expect((result as any).valid).toBe(true);
     });
   });
 
@@ -595,6 +731,31 @@ describe('EvatrClient', () => {
       const rawData = JSON.parse(result.raw!);
       expect(rawData.headers).toEqual(mockResponse.headers);
       expect(rawData.data).toEqual(mockResponse.data);
+    });
+
+    it('should handle undefined statusMessage in extended response', async () => {
+      const mockResponse = {
+        data: {
+          id: 'test-id',
+          anfrageZeitpunkt: '2025-08-03T20:30:00Z',
+          status: 'evatr-9999', // Unknown status code
+        },
+      };
+
+      mockAxiosInstance.post.mockResolvedValue(mockResponse);
+      mockedStatusMessages.getStatusMessage.mockReturnValue(undefined); // No status message found
+      mockedStatusMessages.isSuccessStatus.mockReturnValue(false);
+
+      const result = await client.validateSimple(
+        {
+          vatIdOwn: 'DE123456789',
+          vatIdForeign: 'ATU12345678',
+        },
+        true
+      );
+
+      expect(result.message).toBeUndefined();
+      expect(result.valid).toBe(false);
     });
 
     it('should handle various VAT ID input formats and normalize them consistently', async () => {

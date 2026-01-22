@@ -75,6 +75,38 @@ describe('EvatrUtils', () => {
     });
   });
 
+  describe('explainQualifiedResultCode', () => {
+    it('should return correct explanation for result codes', () => {
+      expect(EvatrUtils.explainQualifiedResultCode('A')).toBe(
+        'Die Angaben stimmen mit den registrierten Daten überein.'
+      );
+      expect(EvatrUtils.explainQualifiedResultCode('B')).toBe(
+        'Die Angaben stimmen mit den registrierten Daten nicht überein.'
+      );
+      expect(EvatrUtils.explainQualifiedResultCode('C')).toBe('Die Angaben wurden nicht angefragt.');
+      expect(EvatrUtils.explainQualifiedResultCode('D')).toBe(
+        'Die Angaben wurden vom EU-Mitgliedsstaat nicht mitgeteilt.'
+      );
+    });
+
+    it('should return unknown for invalid result codes', () => {
+      expect(EvatrUtils.explainQualifiedResultCode('X' as any)).toBe('Unknown validation result');
+      expect(EvatrUtils.explainQualifiedResultCode('Z' as any)).toBe('Unknown validation result');
+    });
+  });
+
+  describe('getVatIdNumber', () => {
+    it('should extract numeric part from VAT-ID', () => {
+      expect(EvatrUtils.getVatIdNumber('DE123456789')).toBe('123456789');
+      expect(EvatrUtils.getVatIdNumber('ATU12345678')).toBe('12345678');
+    });
+
+    it('should handle VAT-IDs with letters in numeric part', () => {
+      expect(EvatrUtils.getVatIdNumber('GB123456789')).toBe('123456789');
+      expect(EvatrUtils.getVatIdNumber('IE1234567A')).toBe('1234567');
+    });
+  });
+
   describe('German VAT-ID checksum validation', () => {
     it('should calculate correct checksum for valid German VAT-ID', () => {
       // Test the internal checksum calculation
@@ -88,6 +120,16 @@ describe('EvatrUtils', () => {
       const vatIdNumber = '123456789'; // Invalid checksum (should be 8)
       const result = EvatrUtils.calculateGermanVatIdCheckDigit(vatIdNumber);
       expect(result).toBe(8);
+    });
+
+    it('should handle check digit of 10 correctly', () => {
+      // Test case where check digit calculation results in 10 (should become 0)
+      // Using a VAT-ID number that results in checkDigit = 10: 000000020
+      // This results in product = 1 after the loop, which gives checkDigit = 11 - 1 = 10 -> 0
+      const vatIdNumber = '000000020';
+      const result = EvatrUtils.calculateGermanVatIdCheckDigit(vatIdNumber);
+      // The algorithm should convert 10 to 0
+      expect(result).toBe(0);
     });
 
     it('should reject German VAT-ID with wrong length', () => {

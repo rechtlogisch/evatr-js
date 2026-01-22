@@ -81,6 +81,62 @@ describe('StatusMessages', () => {
     });
   });
 
+  describe('getAndCacheStatusMessages', () => {
+    beforeEach(() => {
+      StatusMessages.clearCache();
+    });
+
+    it('should return cached messages when cache is valid', () => {
+      mockedExistsSync.mockReturnValue(true);
+      mockedReadFileSync.mockReturnValue(JSON.stringify(mockStatusMessages));
+
+      // First call should load from file
+      const messages1 = StatusMessages.getAndCacheStatusMessages();
+      expect(mockedReadFileSync).toHaveBeenCalledTimes(1);
+
+      // Second call should use cache (within TTL)
+      const messages2 = StatusMessages.getAndCacheStatusMessages();
+      expect(mockedReadFileSync).toHaveBeenCalledTimes(1); // Still 1, not incremented
+      expect(messages1).toEqual(messages2);
+    });
+
+    it('should fallback to constants when file loading fails', () => {
+      mockedExistsSync.mockReturnValue(false);
+
+      const messages = StatusMessages.getAndCacheStatusMessages();
+
+      // Should return fallback constants
+      expect(messages['evatr-0000']).toBeDefined();
+    });
+  });
+
+  describe('getStatusMessages with cache enabled', () => {
+    beforeEach(() => {
+      StatusMessages.clearCache();
+      // Enable cache by accessing private property
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (StatusMessages as any).cache = true;
+    });
+
+    afterEach(() => {
+      // Disable cache after test
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (StatusMessages as any).cache = false;
+      StatusMessages.clearCache();
+    });
+
+    it('should call getAndCacheStatusMessages when cache is enabled', () => {
+      mockedExistsSync.mockReturnValue(true);
+      mockedReadFileSync.mockReturnValue(JSON.stringify(mockStatusMessages));
+
+      const messages = StatusMessages.getStatusMessages();
+
+      expect(messages['evatr-0000']).toEqual(mockStatusMessages[0]);
+      // Should have called getAndCacheStatusMessages (which calls loadFromFile)
+      expect(mockedReadFileSync).toHaveBeenCalled();
+    });
+  });
+
   describe('getStatusMessage', () => {
     beforeEach(() => {
       mockedExistsSync.mockReturnValue(true);
@@ -197,6 +253,9 @@ describe('StatusMessages', () => {
 
   describe('getStatistics', () => {
     it('should return correct statistics', () => {
+      mockedExistsSync.mockReturnValue(true);
+      mockedReadFileSync.mockReturnValue(JSON.stringify(mockStatusMessages));
+
       const stats = StatusMessages.getStatistics();
 
       expect(stats.total).toBe(26);
@@ -214,6 +273,82 @@ describe('StatusMessages', () => {
         503: 3,
       });
       expect(stats.source).toBe('file');
+    });
+
+    it('should handle messages with undefined http code', () => {
+      StatusMessages.clearCache();
+      // JSON doesn't preserve undefined, so we omit the http property
+      // This simulates a message where http is undefined
+      const messagesWithoutHttp: StatusMessage[] = [
+        {
+          status: 'evatr-0000',
+          category: 'Result',
+          // http property is omitted, so it will be undefined
+          message: 'Test message',
+        } as StatusMessage,
+      ];
+
+      mockedExistsSync.mockReturnValue(true);
+      mockedReadFileSync.mockReturnValue(JSON.stringify(messagesWithoutHttp));
+
+      // Enable cache so messages are loaded and cached
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (StatusMessages as any).cache = true;
+
+      // Load messages first to populate cache
+      StatusMessages.getStatusMessages();
+
+      const stats = StatusMessages.getStatistics();
+
+      // When http is undefined, it uses 0 as fallback: acc[msg.http || 0]
+      expect(stats.byHttp[0]).toBe(1);
+
+      // Reset cache
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (StatusMessages as any).cache = false;
+      StatusMessages.clearCache();
+    });
+
+    it('should return constants as source when using fallback', () => {
+      StatusMessages.clearCache();
+      // Enable cache so cachedMessages gets set
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (StatusMessages as any).cache = true;
+      mockedExistsSync.mockReturnValue(false); // File doesn't exist, will use fallback
+
+      // Call getAndCacheStatusMessages to set cachedMessages to FALLBACK_STATUS_MESSAGES
+      StatusMessages.getAndCacheStatusMessages();
+
+      const stats = StatusMessages.getStatistics();
+
+      // cachedMessages should now equal FALLBACK_STATUS_MESSAGES
+      expect(stats.source).toBe('constants');
+
+      // Reset cache
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (StatusMessages as any).cache = false;
+      StatusMessages.clearCache();
+    });
+  });
+
+  describe('loadFromFile', () => {
+    it('should handle file read errors gracefully', () => {
+      mockedExistsSync.mockReturnValue(true);
+      mockedReadFileSync.mockImplementation(() => {
+        throw new Error('File read error');
+      });
+
+      const result = StatusMessages.loadFromFile();
+
+      expect(result).toBeNull();
+    });
+
+    it('should return null when no file found', () => {
+      mockedExistsSync.mockReturnValue(false);
+
+      const result = StatusMessages.loadFromFile();
+
+      expect(result).toBeNull();
     });
   });
 

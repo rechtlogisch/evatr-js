@@ -124,6 +124,24 @@ describe('EvatrMigrationHelper', () => {
       expect(result.errorCode).toBe(500);
       expect(result.errorDescription).toBe('Network error');
     });
+
+    it('should fallback to 500 when error.http is undefined', async () => {
+      const error = new Error('Network error');
+      // No http property
+
+      mockClient.validateSimple.mockRejectedValue(error);
+
+      const params = {
+        ownVatNumber: 'DE123456789',
+        validateVatNumber: 'ATU12345678',
+      };
+
+      const result = await EvatrMigrationHelper.checkSimple(params);
+
+      expect(result.valid).toBe(false);
+      expect(result.errorCode).toBe(500);
+      expect(result.errorDescription).toBe('Network error');
+    });
   });
 
   describe('checkQualified', () => {
@@ -220,6 +238,60 @@ describe('EvatrMigrationHelper', () => {
       expect(result.companyName).toBe('Musterhaus GmbH & Co KG');
       expect(result.city).toBe('Musterort');
     });
+
+    it('should fallback to 500 when error.http is undefined in checkQualified', async () => {
+      const error = new Error('Validation error');
+      // No http property
+
+      mockClient.validateQualified.mockRejectedValue(error);
+
+      const params = {
+        ownVatNumber: 'DE123456789',
+        validateVatNumber: 'ATU12345678',
+        companyName: 'Musterhaus GmbH & Co KG',
+        city: 'Musterort',
+      };
+
+      const result = await EvatrMigrationHelper.checkQualified(params);
+
+      expect(result.valid).toBe(false);
+      expect(result.errorCode).toBe(500);
+      expect(result.errorDescription).toBe('Validation error');
+    });
+
+    it('should include raw response when includeRaw is true', async () => {
+      const mockResponse: Response = {
+        id: 'test-id',
+        timestamp: '2025-08-06T10:00:00Z',
+        status: 'evatr-0000',
+        vatIdOwn: 'DE123456789',
+        vatIdForeign: 'ATU12345678',
+        company: 'A' as const,
+        location: 'A' as const,
+      };
+
+      mockClient.validateQualified.mockResolvedValue(mockResponse);
+      mockClient.isSuccessStatus.mockReturnValue(true);
+      (StatusMessages.getStatusMessage as jest.Mock).mockReturnValue({
+        status: 'evatr-0000',
+        category: 'Result',
+        http: 200,
+        message: 'Valid',
+      });
+
+      const params = {
+        ownVatNumber: 'DE123456789',
+        validateVatNumber: 'ATU12345678',
+        companyName: 'Test Company',
+        city: 'Test City',
+        includeRaw: true,
+      };
+
+      const result = await EvatrMigrationHelper.checkQualified(params);
+
+      expect(result.raw).toBeDefined();
+      expect(result.raw).toContain('"timestamp"');
+    });
   });
 
   describe('ResultType enum', () => {
@@ -228,6 +300,100 @@ describe('EvatrMigrationHelper', () => {
       expect(ResultType.NO_MATCH).toBe('B');
       expect(ResultType.NOT_QUERIED).toBe('C');
       expect(ResultType.NOT_RETURNED).toBe('D');
+    });
+  });
+
+  describe('getResultDescription', () => {
+    it('should return correct description for NOT_RETURNED', async () => {
+      const mockResponse: Response = {
+        id: 'test-id',
+        timestamp: '2025-08-06T10:00:00Z',
+        status: 'evatr-0000',
+        vatIdOwn: 'DE123456789',
+        vatIdForeign: 'ATU12345678',
+        street: 'D' as const,
+      };
+
+      mockClient.validateQualified.mockResolvedValue(mockResponse);
+      mockClient.isSuccessStatus.mockReturnValue(true);
+      (StatusMessages.getStatusMessage as jest.Mock).mockReturnValue({
+        status: 'evatr-0000',
+        category: 'Result',
+        http: 200,
+        message: 'Valid',
+      });
+
+      const params = {
+        ownVatNumber: 'DE123456789',
+        validateVatNumber: 'ATU12345678',
+        companyName: 'Test Company',
+        city: 'Test City',
+      };
+
+      const result = await EvatrMigrationHelper.checkQualified(params);
+
+      expect(result.resultStreetDescription).toBe('vom EU-Mitgliedsstaat nicht mitgeteilt');
+    });
+
+    it('should return undefined for unknown result type', async () => {
+      const mockResponse: Response = {
+        id: 'test-id',
+        timestamp: '2025-08-06T10:00:00Z',
+        status: 'evatr-0000',
+        vatIdOwn: 'DE123456789',
+        vatIdForeign: 'ATU12345678',
+        street: 'X' as any, // Unknown result type
+      };
+
+      mockClient.validateQualified.mockResolvedValue(mockResponse);
+      mockClient.isSuccessStatus.mockReturnValue(true);
+      (StatusMessages.getStatusMessage as jest.Mock).mockReturnValue({
+        status: 'evatr-0000',
+        category: 'Result',
+        http: 200,
+        message: 'Valid',
+      });
+
+      const params = {
+        ownVatNumber: 'DE123456789',
+        validateVatNumber: 'ATU12345678',
+        companyName: 'Test Company',
+        city: 'Test City',
+      };
+
+      const result = await EvatrMigrationHelper.checkQualified(params);
+
+      expect(result.resultStreetDescription).toBeUndefined();
+    });
+  });
+
+  describe('mapStatusToErrorCode', () => {
+    it('should return 999 for unmapped status codes', async () => {
+      const mockResponse: Response = {
+        id: 'test-id',
+        timestamp: '2025-08-06T10:00:00Z',
+        status: 'evatr-9999', // Unmapped status
+        vatIdOwn: 'DE123456789',
+        vatIdForeign: 'ATU12345678',
+      };
+
+      mockClient.validateSimple.mockResolvedValue(mockResponse);
+      mockClient.isSuccessStatus.mockReturnValue(false);
+      (StatusMessages.getStatusMessage as jest.Mock).mockReturnValue({
+        status: 'evatr-9999',
+        category: 'Error',
+        http: 500,
+        message: 'Unknown error',
+      });
+
+      const params = {
+        ownVatNumber: 'DE123456789',
+        validateVatNumber: 'ATU12345678',
+      };
+
+      const result = await EvatrMigrationHelper.checkSimple(params);
+
+      expect(result.errorCode).toBe(999);
     });
   });
 });

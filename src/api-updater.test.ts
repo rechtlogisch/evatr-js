@@ -83,6 +83,18 @@ describe('EvatrApiUpdater', () => {
       expect(result.currentVersion).toBeUndefined();
       expect(result.latestVersion).toBe('v:1.2.3.6-FINAL.726');
     });
+
+    it('should throw error when version is missing from API docs', async () => {
+      const mockApiDocs = {
+        info: {},
+      };
+
+      mockedAxios.get.mockResolvedValue({ data: mockApiDocs });
+
+      await expect(EvatrApiUpdater.checkApiDocsUpdate()).rejects.toThrow(
+        'Could not extract version from API docs'
+      );
+    });
   });
 
   describe('downloadApiDocs', () => {
@@ -104,6 +116,12 @@ describe('EvatrApiUpdater', () => {
 
       expect(mockedWriteFileSync).toHaveBeenCalledTimes(1);
       expect(result).toContain('api-docs-v:1.2.3.6-FINAL.726-2025-08-03.json');
+    });
+
+    it('should handle errors in downloadApiDocs', async () => {
+      mockedAxios.get.mockRejectedValue(new Error('Network error'));
+
+      await expect(EvatrApiUpdater.downloadApiDocs()).rejects.toThrow('Network error');
     });
   });
 
@@ -145,6 +163,29 @@ describe('EvatrApiUpdater', () => {
       expect(result.diff?.removed).toHaveLength(0);
       expect(result.diff?.modified).toHaveLength(0);
     });
+
+    it('should handle file read errors in checkStatusMessagesUpdate', async () => {
+      const latestMessages = [
+        { status: 'evatr-0000', category: 'Ergebnis', http: 200, message: 'Valid' },
+      ];
+
+      mockedAxios.get.mockResolvedValue({ data: latestMessages });
+      mockedExistsSync.mockReturnValue(true);
+      mockedReadFileSync.mockImplementation(() => {
+        throw new Error('File read error');
+      });
+
+      const result = await EvatrApiUpdater.checkStatusMessagesUpdate();
+
+      expect(result.hasUpdate).toBe(true);
+      expect(result.currentVersion).toBe('0 messages');
+    });
+
+    it('should handle errors in checkStatusMessagesUpdate', async () => {
+      mockedAxios.get.mockRejectedValue(new Error('Network error'));
+
+      await expect(EvatrApiUpdater.checkStatusMessagesUpdate()).rejects.toThrow('Network error');
+    });
   });
 
   describe('downloadStatusMessages', () => {
@@ -164,6 +205,12 @@ describe('EvatrApiUpdater', () => {
 
       expect(mockedWriteFileSync).toHaveBeenCalledTimes(2);
       expect(result).toContain('statusmeldungen-2025-08-03.json');
+    });
+
+    it('should handle errors in downloadStatusMessages', async () => {
+      mockedAxios.get.mockRejectedValue(new Error('Network error'));
+
+      await expect(EvatrApiUpdater.downloadStatusMessages()).rejects.toThrow('Network error');
     });
   });
 
@@ -414,6 +461,37 @@ export const STATUS_MESSAGES: Record<string, ApiStatusMessage> = {};
       expect(mockedWriteFileSync).toHaveBeenCalled();
     });
 
+    it('should handle no update path in checkAndUpdateAll', async () => {
+      const consoleSpy = jest.spyOn(console, 'log').mockImplementation();
+
+      // Mock API docs check - no update
+      const apiDocsResponse = { data: { info: { version: '1.0.0' } } };
+      (axios.get as jest.MockedFunction<typeof axios.get>).mockResolvedValueOnce(apiDocsResponse);
+      mockedExistsSync.mockReturnValueOnce(true);
+      mockedReadFileSync.mockReturnValueOnce(JSON.stringify({ info: { version: '1.0.0' } }));
+
+      // Mock status messages check - no update
+      const statusMessagesResponse = {
+        data: [{ status: 'evatr-0000', kategorie: 'Ergebnis', httpcode: 200, meldung: 'Valid' }],
+      };
+      (axios.get as jest.MockedFunction<typeof axios.get>).mockResolvedValueOnce(
+        statusMessagesResponse
+      );
+      mockedExistsSync.mockReturnValueOnce(true);
+      mockedReadFileSync.mockReturnValueOnce(
+        JSON.stringify([
+          { status: 'evatr-0000', kategorie: 'Ergebnis', httpcode: 200, meldung: 'Valid' },
+        ])
+      );
+
+      await expect(EvatrApiUpdater.checkAndUpdateAll()).resolves.not.toThrow();
+
+      // Verify that the "API docs are up to date" message was logged
+      expect(consoleSpy).toHaveBeenCalledWith('📄 API docs are up to date');
+
+      consoleSpy.mockRestore();
+    });
+
     it('should handle errors in checkAndUpdateAll', async () => {
       // Mock the first API call (checkApiDocsUpdate) to fail with network error
       (axios.get as jest.MockedFunction<typeof axios.get>).mockRejectedValueOnce(
@@ -455,6 +533,24 @@ export const STATUS_MESSAGES: Record<string, ApiStatusMessage> = {};
       mockedReadFileSync.mockReturnValue('invalid json');
 
       await expect(EvatrApiUpdater.updateConstantsFromFile('/path/to/file.json')).rejects.toThrow();
+    });
+
+    it('should map all category types correctly (Ergebnis, Fehler, Hint)', async () => {
+      const statusMessages = [
+        { status: 'evatr-0000', kategorie: 'Ergebnis', httpcode: 200, meldung: 'Valid' },
+        { status: 'evatr-0004', kategorie: 'Fehler', httpcode: 400, meldung: 'Error' },
+        { status: 'evatr-0001', kategorie: 'Hinweis', httpcode: 200, meldung: 'Hint' },
+      ];
+
+      mockedReadFileSync.mockReturnValueOnce(JSON.stringify(statusMessages));
+      mockedReadFileSync.mockReturnValueOnce(
+        'export const STATUS_MESSAGES: Record<string, ApiStatusMessage> = {};'
+      );
+
+      await expect(
+        EvatrApiUpdater.updateConstantsFromFile('/path/to/file.json')
+      ).resolves.not.toThrow();
+      expect(mockedWriteFileSync).toHaveBeenCalled();
     });
   });
 });

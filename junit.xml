@@ -1,0 +1,391 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="jest tests" tests="186" failures="0" errors="0" time="3.444">
+  <testsuite name="EvatrUtils" errors="0" failures="0" skipped="0" timestamp="2026-01-22T16:46:36" time="2.126" tests="24">
+    <testcase classname="EvatrUtils checkVatIdSyntaxForCountry should validate German VAT-IDs correctly" name="EvatrUtils checkVatIdSyntaxForCountry should validate German VAT-IDs correctly" time="0.004">
+    </testcase>
+    <testcase classname="EvatrUtils checkVatIdSyntaxForCountry should validate Austrian VAT-IDs correctly" name="EvatrUtils checkVatIdSyntaxForCountry should validate Austrian VAT-IDs correctly" time="0.001">
+    </testcase>
+    <testcase classname="EvatrUtils checkVatIdSyntaxForCountry should extract country code from VAT-ID" name="EvatrUtils checkVatIdSyntaxForCountry should extract country code from VAT-ID" time="0">
+    </testcase>
+    <testcase classname="EvatrUtils getCountryName should return correct country names" name="EvatrUtils getCountryName should return correct country names" time="0">
+    </testcase>
+    <testcase classname="EvatrUtils isEUMemberState should identify EU member states correctly" name="EvatrUtils isEUMemberState should identify EU member states correctly" time="0.005">
+    </testcase>
+    <testcase classname="EvatrUtils isGermanVatId should identify German VAT-IDs correctly" name="EvatrUtils isGermanVatId should identify German VAT-IDs correctly" time="0.001">
+    </testcase>
+    <testcase classname="EvatrUtils canValidate should allow German VAT-ID to validate non-German EU VAT-IDs" name="EvatrUtils canValidate should allow German VAT-ID to validate non-German EU VAT-IDs" time="0.001">
+    </testcase>
+    <testcase classname="EvatrUtils canValidate should allow German VAT-ID to validate another German VAT-ID" name="EvatrUtils canValidate should allow German VAT-ID to validate another German VAT-ID" time="0.012">
+    </testcase>
+    <testcase classname="EvatrUtils canValidate should not allow non-German VAT-ID to make requests" name="EvatrUtils canValidate should not allow non-German VAT-ID to make requests" time="0.001">
+    </testcase>
+    <testcase classname="EvatrUtils getTestVatIds should return test VAT-IDs for different countries" name="EvatrUtils getTestVatIds should return test VAT-IDs for different countries" time="0.001">
+    </testcase>
+    <testcase classname="EvatrUtils explainQualifiedResultCode should return correct explanation for result codes" name="EvatrUtils explainQualifiedResultCode should return correct explanation for result codes" time="0.001">
+    </testcase>
+    <testcase classname="EvatrUtils explainQualifiedResultCode should return unknown for invalid result codes" name="EvatrUtils explainQualifiedResultCode should return unknown for invalid result codes" time="0">
+    </testcase>
+    <testcase classname="EvatrUtils getVatIdNumber should extract numeric part from VAT-ID" name="EvatrUtils getVatIdNumber should extract numeric part from VAT-ID" time="0">
+    </testcase>
+    <testcase classname="EvatrUtils getVatIdNumber should handle VAT-IDs with letters in numeric part" name="EvatrUtils getVatIdNumber should handle VAT-IDs with letters in numeric part" time="0">
+    </testcase>
+    <testcase classname="EvatrUtils German VAT-ID checksum validation should calculate correct checksum for valid German VAT-ID" name="EvatrUtils German VAT-ID checksum validation should calculate correct checksum for valid German VAT-ID" time="0">
+    </testcase>
+    <testcase classname="EvatrUtils German VAT-ID checksum validation should reject German VAT-ID with incorrect checksum" name="EvatrUtils German VAT-ID checksum validation should reject German VAT-ID with incorrect checksum" time="0">
+    </testcase>
+    <testcase classname="EvatrUtils German VAT-ID checksum validation should handle check digit of 10 correctly" name="EvatrUtils German VAT-ID checksum validation should handle check digit of 10 correctly" time="0.001">
+    </testcase>
+    <testcase classname="EvatrUtils German VAT-ID checksum validation should reject German VAT-ID with wrong length" name="EvatrUtils German VAT-ID checksum validation should reject German VAT-ID with wrong length" time="0.012">
+    </testcase>
+    <testcase classname="EvatrUtils Country validation edge cases should handle unknown country codes" name="EvatrUtils Country validation edge cases should handle unknown country codes" time="0">
+    </testcase>
+    <testcase classname="EvatrUtils Country validation edge cases should validate VAT-IDs for all supported EU countries" name="EvatrUtils Country validation edge cases should validate VAT-IDs for all supported EU countries" time="0">
+    </testcase>
+    <testcase classname="EvatrUtils Country validation edge cases should handle malformed VAT-IDs gracefully" name="EvatrUtils Country validation edge cases should handle malformed VAT-IDs gracefully" time="0">
+    </testcase>
+    <testcase classname="EvatrUtils Utility function edge cases should handle empty and null inputs for country name lookup" name="EvatrUtils Utility function edge cases should handle empty and null inputs for country name lookup" time="0">
+    </testcase>
+    <testcase classname="EvatrUtils Utility function edge cases should handle case sensitivity in country codes" name="EvatrUtils Utility function edge cases should handle case sensitivity in country codes" time="0.001">
+    </testcase>
+    <testcase classname="EvatrUtils Utility function edge cases should validate German VAT-ID detection with edge cases" name="EvatrUtils Utility function edge cases should validate German VAT-ID detection with edge cases" time="0.001">
+    </testcase>
+  </testsuite>
+  <testsuite name="StatusMessages" errors="0" failures="0" skipped="0" timestamp="2026-01-22T16:46:36" time="2.391" tests="27">
+    <testcase classname="StatusMessages getStatusMessages should load status messages from file when available" name="StatusMessages getStatusMessages should load status messages from file when available" time="0.004">
+    </testcase>
+    <testcase classname="StatusMessages getStatusMessages should fallback to constants when file not available" name="StatusMessages getStatusMessages should fallback to constants when file not available" time="0">
+    </testcase>
+    <testcase classname="StatusMessages getStatusMessages should handle file read errors gracefully" name="StatusMessages getStatusMessages should handle file read errors gracefully" time="0">
+    </testcase>
+    <testcase classname="StatusMessages getAndCacheStatusMessages should return cached messages when cache is valid" name="StatusMessages getAndCacheStatusMessages should return cached messages when cache is valid" time="0.001">
+    </testcase>
+    <testcase classname="StatusMessages getAndCacheStatusMessages should fallback to constants when file loading fails" name="StatusMessages getAndCacheStatusMessages should fallback to constants when file loading fails" time="0">
+    </testcase>
+    <testcase classname="StatusMessages getStatusMessages with cache enabled should call getAndCacheStatusMessages when cache is enabled" name="StatusMessages getStatusMessages with cache enabled should call getAndCacheStatusMessages when cache is enabled" time="0.001">
+    </testcase>
+    <testcase classname="StatusMessages getStatusMessage should return specific status message" name="StatusMessages getStatusMessage should return specific status message" time="0">
+    </testcase>
+    <testcase classname="StatusMessages getStatusMessage should return undefined for non-existent status" name="StatusMessages getStatusMessage should return undefined for non-existent status" time="0.001">
+    </testcase>
+    <testcase classname="StatusMessages status checking methods should identify success status correctly" name="StatusMessages status checking methods should identify success status correctly" time="0">
+    </testcase>
+    <testcase classname="StatusMessages status checking methods should identify error status correctly" name="StatusMessages status checking methods should identify error status correctly" time="0.003">
+    </testcase>
+    <testcase classname="StatusMessages status checking methods should identify warning status correctly" name="StatusMessages status checking methods should identify warning status correctly" time="0.002">
+    </testcase>
+    <testcase classname="StatusMessages filtering methods should get messages by category" name="StatusMessages filtering methods should get messages by category" time="0.001">
+    </testcase>
+    <testcase classname="StatusMessages filtering methods should get messages by HTTP code" name="StatusMessages filtering methods should get messages by HTTP code" time="0">
+    </testcase>
+    <testcase classname="StatusMessages getAvailableStatusCodes should return sorted list of status codes" name="StatusMessages getAvailableStatusCodes should return sorted list of status codes" time="0">
+    </testcase>
+    <testcase classname="StatusMessages getStatistics should return correct statistics" name="StatusMessages getStatistics should return correct statistics" time="0">
+    </testcase>
+    <testcase classname="StatusMessages getStatistics should handle messages with undefined http code" name="StatusMessages getStatistics should handle messages with undefined http code" time="0">
+    </testcase>
+    <testcase classname="StatusMessages getStatistics should return constants as source when using fallback" name="StatusMessages getStatistics should return constants as source when using fallback" time="0.005">
+    </testcase>
+    <testcase classname="StatusMessages loadFromFile should handle file read errors gracefully" name="StatusMessages loadFromFile should handle file read errors gracefully" time="0">
+    </testcase>
+    <testcase classname="StatusMessages loadFromFile should return null when no file found" name="StatusMessages loadFromFile should return null when no file found" time="0">
+    </testcase>
+    <testcase classname="StatusMessages loadFromPath should load messages from specific file path" name="StatusMessages loadFromPath should load messages from specific file path" time="0">
+    </testcase>
+    <testcase classname="StatusMessages loadFromPath should return null for non-existent file" name="StatusMessages loadFromPath should return null for non-existent file" time="0.001">
+    </testcase>
+    <testcase classname="StatusMessages loadFromPath should handle JSON parse errors" name="StatusMessages loadFromPath should handle JSON parse errors" time="0">
+    </testcase>
+    <testcase classname="StatusMessages clearCache should clear the cache" name="StatusMessages clearCache should clear the cache" time="0">
+    </testcase>
+    <testcase classname="StatusMessages edge cases and error handling should handle malformed status message objects" name="StatusMessages edge cases and error handling should handle malformed status message objects" time="0.001">
+    </testcase>
+    <testcase classname="StatusMessages loadFromPath edge cases should handle file system errors gracefully" name="StatusMessages loadFromPath edge cases should handle file system errors gracefully" time="0">
+    </testcase>
+    <testcase classname="StatusMessages loadFromPath edge cases should handle JSON parsing errors gracefully" name="StatusMessages loadFromPath edge cases should handle JSON parsing errors gracefully" time="0">
+    </testcase>
+    <testcase classname="StatusMessages loadFromPath edge cases should handle empty file gracefully" name="StatusMessages loadFromPath edge cases should handle empty file gracefully" time="0.001">
+    </testcase>
+  </testsuite>
+  <testsuite name="EvatrClient" errors="0" failures="0" skipped="0" timestamp="2026-01-22T16:46:36" time="2.43" tests="36">
+    <testcase classname="EvatrClient getAvailability error handling should wrap axios errors into EvatrApiError" name="EvatrClient getAvailability error handling should wrap axios errors into EvatrApiError" time="0.006">
+    </testcase>
+    <testcase classname="EvatrClient getAvailability error handling should include http/status/field when available" name="EvatrClient getAvailability error handling should include http/status/field when available" time="0.001">
+    </testcase>
+    <testcase classname="EvatrClient getAvailability error handling should pass through EvatrApiError unchanged" name="EvatrClient getAvailability error handling should pass through EvatrApiError unchanged" time="0.001">
+    </testcase>
+    <testcase classname="EvatrClient getAvailability error handling should use error.response.data.message when available in interceptor" name="EvatrClient getAvailability error handling should use error.response.data.message when available in interceptor" time="0.002">
+    </testcase>
+    <testcase classname="EvatrClient getAvailability error handling should use error.response.data.message when available" name="EvatrClient getAvailability error handling should use error.response.data.message when available" time="0.001">
+    </testcase>
+    <testcase classname="EvatrClient getAvailability error handling should handle error without message property in performValidation" name="EvatrClient getAvailability error handling should handle error without message property in performValidation" time="0.001">
+    </testcase>
+    <testcase classname="EvatrClient constructor should create client with default config" name="EvatrClient constructor should create client with default config" time="0">
+    </testcase>
+    <testcase classname="EvatrClient constructor should create client with custom config" name="EvatrClient constructor should create client with custom config" time="0">
+    </testcase>
+    <testcase classname="EvatrClient validateSimple should perform simple validation successfully" name="EvatrClient validateSimple should perform simple validation successfully" time="0.007">
+    </testcase>
+    <testcase classname="EvatrClient validateSimple should throw error for missing required fields" name="EvatrClient validateSimple should throw error for missing required fields" time="0.016">
+    </testcase>
+    <testcase classname="EvatrClient validateSimple should throw error for invalid VAT-ID format" name="EvatrClient validateSimple should throw error for invalid VAT-ID format" time="0.001">
+    </testcase>
+    <testcase classname="EvatrClient validateSimple should throw error for invalid foreign VAT-ID format" name="EvatrClient validateSimple should throw error for invalid foreign VAT-ID format" time="0.001">
+    </testcase>
+    <testcase classname="EvatrClient validateSimple should include raw response data when includeRaw is true" name="EvatrClient validateSimple should include raw response data when includeRaw is true" time="0">
+    </testcase>
+    <testcase classname="EvatrClient validateSimple should not include raw response data when includeRaw is false or undefined" name="EvatrClient validateSimple should not include raw response data when includeRaw is false or undefined" time="0">
+    </testcase>
+    <testcase classname="EvatrClient validate should perform validation with full request object" name="EvatrClient validate should perform validation with full request object" time="0.008">
+    </testcase>
+    <testcase classname="EvatrClient validate should perform validation with extended response" name="EvatrClient validate should perform validation with extended response" time="0">
+    </testcase>
+    <testcase classname="EvatrClient validateQualified should perform qualified validation successfully" name="EvatrClient validateQualified should perform qualified validation successfully" time="0.001">
+    </testcase>
+    <testcase classname="EvatrClient validateQualified should include raw response data when includeRaw is true" name="EvatrClient validateQualified should include raw response data when includeRaw is true" time="0">
+    </testcase>
+    <testcase classname="EvatrClient getStatusMessages should fetch status messages from API" name="EvatrClient getStatusMessages should fetch status messages from API" time="0">
+    </testcase>
+    <testcase classname="EvatrClient getStatusMessages should map unknown categories to undefined" name="EvatrClient getStatusMessages should map unknown categories to undefined" time="0">
+    </testcase>
+    <testcase classname="EvatrClient getStatusMessages should wrap axios errors into EvatrApiError (network)" name="EvatrClient getStatusMessages should wrap axios errors into EvatrApiError (network)" time="0.001">
+    </testcase>
+    <testcase classname="EvatrClient getStatusMessages should include http/status/field from axios error response" name="EvatrClient getStatusMessages should include http/status/field from axios error response" time="0">
+    </testcase>
+    <testcase classname="EvatrClient getAvailability should fetch availability map from API" name="EvatrClient getAvailability should fetch availability map from API" time="0.001">
+    </testcase>
+    <testcase classname="EvatrClient status checking methods should check success status correctly" name="EvatrClient status checking methods should check success status correctly" time="0">
+    </testcase>
+    <testcase classname="EvatrClient status checking methods should check error status correctly" name="EvatrClient status checking methods should check error status correctly" time="0.004">
+    </testcase>
+    <testcase classname="EvatrClient status checking methods should check warning status correctly" name="EvatrClient status checking methods should check warning status correctly" time="0.001">
+    </testcase>
+    <testcase classname="EvatrClient status checking methods should get status message" name="EvatrClient status checking methods should get status message" time="0.001">
+    </testcase>
+    <testcase classname="EvatrClient static utility methods should validate VAT-ID format" name="EvatrClient static utility methods should validate VAT-ID format" time="0.001">
+    </testcase>
+    <testcase classname="EvatrClient static utility methods should get country code from VAT-ID" name="EvatrClient static utility methods should get country code from VAT-ID" time="0">
+    </testcase>
+    <testcase classname="EvatrClient static utility methods should format VAT-ID" name="EvatrClient static utility methods should format VAT-ID" time="0.001">
+    </testcase>
+    <testcase classname="EvatrClient VAT ID normalization in responses should return normalized VAT IDs in simple validation response" name="EvatrClient VAT ID normalization in responses should return normalized VAT IDs in simple validation response" time="0.001">
+    </testcase>
+    <testcase classname="EvatrClient VAT ID normalization in responses should return normalized VAT IDs in qualified validation response" name="EvatrClient VAT ID normalization in responses should return normalized VAT IDs in qualified validation response" time="0">
+    </testcase>
+    <testcase classname="EvatrClient VAT ID normalization in responses should return normalized VAT IDs in extended response" name="EvatrClient VAT ID normalization in responses should return normalized VAT IDs in extended response" time="0.001">
+    </testcase>
+    <testcase classname="EvatrClient VAT ID normalization in responses should include raw response data in extended response when includeRaw is true" name="EvatrClient VAT ID normalization in responses should include raw response data in extended response when includeRaw is true" time="0">
+    </testcase>
+    <testcase classname="EvatrClient VAT ID normalization in responses should handle undefined statusMessage in extended response" name="EvatrClient VAT ID normalization in responses should handle undefined statusMessage in extended response" time="0">
+    </testcase>
+    <testcase classname="EvatrClient VAT ID normalization in responses should handle various VAT ID input formats and normalize them consistently" name="EvatrClient VAT ID normalization in responses should handle various VAT ID input formats and normalize them consistently" time="0.001">
+    </testcase>
+  </testsuite>
+  <testsuite name="EvatrApiUpdater" errors="0" failures="0" skipped="0" timestamp="2026-01-22T16:46:36" time="2.45" tests="32">
+    <testcase classname="EvatrApiUpdater checkApiDocsUpdate should detect update when versions differ" name="EvatrApiUpdater checkApiDocsUpdate should detect update when versions differ" time="0.007">
+    </testcase>
+    <testcase classname="EvatrApiUpdater checkApiDocsUpdate should detect no update when versions are same" name="EvatrApiUpdater checkApiDocsUpdate should detect no update when versions are same" time="0.001">
+    </testcase>
+    <testcase classname="EvatrApiUpdater checkApiDocsUpdate should handle missing local file" name="EvatrApiUpdater checkApiDocsUpdate should handle missing local file" time="0.002">
+    </testcase>
+    <testcase classname="EvatrApiUpdater checkApiDocsUpdate should throw error when version is missing from API docs" name="EvatrApiUpdater checkApiDocsUpdate should throw error when version is missing from API docs" time="0.016">
+    </testcase>
+    <testcase classname="EvatrApiUpdater downloadApiDocs should download and save API docs with timestamp" name="EvatrApiUpdater downloadApiDocs should download and save API docs with timestamp" time="0.002">
+    </testcase>
+    <testcase classname="EvatrApiUpdater downloadApiDocs should handle errors in downloadApiDocs" name="EvatrApiUpdater downloadApiDocs should handle errors in downloadApiDocs" time="0.001">
+    </testcase>
+    <testcase classname="EvatrApiUpdater checkStatusMessagesUpdate should detect differences in status messages" name="EvatrApiUpdater checkStatusMessagesUpdate should detect differences in status messages" time="0">
+    </testcase>
+    <testcase classname="EvatrApiUpdater checkStatusMessagesUpdate should detect no differences when messages are same" name="EvatrApiUpdater checkStatusMessagesUpdate should detect no differences when messages are same" time="0.01">
+    </testcase>
+    <testcase classname="EvatrApiUpdater checkStatusMessagesUpdate should handle file read errors in checkStatusMessagesUpdate" name="EvatrApiUpdater checkStatusMessagesUpdate should handle file read errors in checkStatusMessagesUpdate" time="0.001">
+    </testcase>
+    <testcase classname="EvatrApiUpdater checkStatusMessagesUpdate should handle errors in checkStatusMessagesUpdate" name="EvatrApiUpdater checkStatusMessagesUpdate should handle errors in checkStatusMessagesUpdate" time="0">
+    </testcase>
+    <testcase classname="EvatrApiUpdater downloadStatusMessages should download and save status messages with timestamp" name="EvatrApiUpdater downloadStatusMessages should download and save status messages with timestamp" time="0.001">
+    </testcase>
+    <testcase classname="EvatrApiUpdater downloadStatusMessages should handle errors in downloadStatusMessages" name="EvatrApiUpdater downloadStatusMessages should handle errors in downloadStatusMessages" time="0">
+    </testcase>
+    <testcase classname="EvatrApiUpdater compareStatusMessages should detect added messages" name="EvatrApiUpdater compareStatusMessages should detect added messages" time="0.001">
+    </testcase>
+    <testcase classname="EvatrApiUpdater compareStatusMessages should detect removed messages" name="EvatrApiUpdater compareStatusMessages should detect removed messages" time="0">
+    </testcase>
+    <testcase classname="EvatrApiUpdater compareStatusMessages should detect modified messages" name="EvatrApiUpdater compareStatusMessages should detect modified messages" time="0">
+    </testcase>
+    <testcase classname="EvatrApiUpdater error handling should handle API request errors" name="EvatrApiUpdater error handling should handle API request errors" time="0.001">
+    </testcase>
+    <testcase classname="EvatrApiUpdater error handling should handle file system errors" name="EvatrApiUpdater error handling should handle file system errors" time="0.004">
+    </testcase>
+    <testcase classname="EvatrApiUpdater printStatusMessageDiff should print differences when messages are added" name="EvatrApiUpdater printStatusMessageDiff should print differences when messages are added" time="0.001">
+    </testcase>
+    <testcase classname="EvatrApiUpdater printStatusMessageDiff should print differences when messages are removed" name="EvatrApiUpdater printStatusMessageDiff should print differences when messages are removed" time="0">
+    </testcase>
+    <testcase classname="EvatrApiUpdater printStatusMessageDiff should print differences when messages are modified" name="EvatrApiUpdater printStatusMessageDiff should print differences when messages are modified" time="0.001">
+    </testcase>
+    <testcase classname="EvatrApiUpdater printStatusMessageDiff should print no differences message when no changes" name="EvatrApiUpdater printStatusMessageDiff should print no differences message when no changes" time="0">
+    </testcase>
+    <testcase classname="EvatrApiUpdater updateConstantsFile should update constants file with new status messages" name="EvatrApiUpdater updateConstantsFile should update constants file with new status messages" time="0.001">
+    </testcase>
+    <testcase classname="EvatrApiUpdater updateConstantsFile should handle file read errors in updateConstantsFile" name="EvatrApiUpdater updateConstantsFile should handle file read errors in updateConstantsFile" time="0">
+    </testcase>
+    <testcase classname="EvatrApiUpdater updateConstantsFile should handle file write errors in updateConstantsFile" name="EvatrApiUpdater updateConstantsFile should handle file write errors in updateConstantsFile" time="0.001">
+    </testcase>
+    <testcase classname="EvatrApiUpdater checkAndUpdateAll should run complete update check with no updates available" name="EvatrApiUpdater checkAndUpdateAll should run complete update check with no updates available" time="0.001">
+    </testcase>
+    <testcase classname="EvatrApiUpdater checkAndUpdateAll should run complete update check with updates available" name="EvatrApiUpdater checkAndUpdateAll should run complete update check with updates available" time="0.001">
+    </testcase>
+    <testcase classname="EvatrApiUpdater checkAndUpdateAll should handle no update path in checkAndUpdateAll" name="EvatrApiUpdater checkAndUpdateAll should handle no update path in checkAndUpdateAll" time="0.004">
+    </testcase>
+    <testcase classname="EvatrApiUpdater checkAndUpdateAll should handle errors in checkAndUpdateAll" name="EvatrApiUpdater checkAndUpdateAll should handle errors in checkAndUpdateAll" time="0.001">
+    </testcase>
+    <testcase classname="EvatrApiUpdater updateConstantsFromFile should update constants from a file" name="EvatrApiUpdater updateConstantsFromFile should update constants from a file" time="0.001">
+    </testcase>
+    <testcase classname="EvatrApiUpdater updateConstantsFromFile should handle file read errors in updateConstantsFromFile" name="EvatrApiUpdater updateConstantsFromFile should handle file read errors in updateConstantsFromFile" time="0">
+    </testcase>
+    <testcase classname="EvatrApiUpdater updateConstantsFromFile should handle JSON parse errors in updateConstantsFromFile" name="EvatrApiUpdater updateConstantsFromFile should handle JSON parse errors in updateConstantsFromFile" time="0.001">
+    </testcase>
+    <testcase classname="EvatrApiUpdater updateConstantsFromFile should map all category types correctly (Ergebnis, Fehler, Hint)" name="EvatrApiUpdater updateConstantsFromFile should map all category types correctly (Ergebnis, Fehler, Hint)" time="0">
+    </testcase>
+  </testsuite>
+  <testsuite name="TypeScript Types" errors="0" failures="0" skipped="0" timestamp="2026-01-22T16:46:36" time="2.456" tests="23">
+    <testcase classname="TypeScript Types ApiRequest should accept valid simple request" name="TypeScript Types ApiRequest should accept valid simple request" time="0.005">
+    </testcase>
+    <testcase classname="TypeScript Types ApiRequest should accept valid qualified request" name="TypeScript Types ApiRequest should accept valid qualified request" time="0.001">
+    </testcase>
+    <testcase classname="TypeScript Types ApiResponse should accept valid response" name="TypeScript Types ApiResponse should accept valid response" time="0">
+    </testcase>
+    <testcase classname="TypeScript Types ApiResponse should accept response with validation results" name="TypeScript Types ApiResponse should accept response with validation results" time="0.001">
+    </testcase>
+    <testcase classname="TypeScript Types ApiResponse should accept response with validity dates" name="TypeScript Types ApiResponse should accept response with validity dates" time="0">
+    </testcase>
+    <testcase classname="TypeScript Types EvatrClientConfig should accept empty config" name="TypeScript Types EvatrClientConfig should accept empty config" time="0.001">
+    </testcase>
+    <testcase classname="TypeScript Types EvatrClientConfig should accept partial config" name="TypeScript Types EvatrClientConfig should accept partial config" time="0">
+    </testcase>
+    <testcase classname="TypeScript Types EvatrClientConfig should accept full config" name="TypeScript Types EvatrClientConfig should accept full config" time="0.001">
+    </testcase>
+    <testcase classname="TypeScript Types ApiStatusMessage should accept valid status message" name="TypeScript Types ApiStatusMessage should accept valid status message" time="0">
+    </testcase>
+    <testcase classname="TypeScript Types ApiStatusMessage should accept status message with field" name="TypeScript Types ApiStatusMessage should accept status message with field" time="0">
+    </testcase>
+    <testcase classname="TypeScript Types ApiStatusMessage should only accept valid categories" name="TypeScript Types ApiStatusMessage should only accept valid categories" time="0.001">
+    </testcase>
+    <testcase classname="TypeScript Types StatusMessage should accept valid status message" name="TypeScript Types StatusMessage should accept valid status message" time="0">
+    </testcase>
+    <testcase classname="TypeScript Types StatusMessage should accept status message with field" name="TypeScript Types StatusMessage should accept status message with field" time="0">
+    </testcase>
+    <testcase classname="TypeScript Types StatusMessage should only accept valid categories" name="TypeScript Types StatusMessage should only accept valid categories" time="0.001">
+    </testcase>
+    <testcase classname="TypeScript Types ApiEUMemberState should accept valid member state" name="TypeScript Types ApiEUMemberState should accept valid member state" time="0">
+    </testcase>
+    <testcase classname="TypeScript Types ApiEUMemberState should accept unavailable member state" name="TypeScript Types ApiEUMemberState should accept unavailable member state" time="0">
+    </testcase>
+    <testcase classname="TypeScript Types Availability should accept availability map" name="TypeScript Types Availability should accept availability map" time="0">
+    </testcase>
+    <testcase classname="TypeScript Types QualifiedResultCode should only accept valid validation results" name="TypeScript Types QualifiedResultCode should only accept valid validation results" time="0">
+    </testcase>
+    <testcase classname="TypeScript Types Request type aliases should accept SimpleRequest" name="TypeScript Types Request type aliases should accept SimpleRequest" time="0">
+    </testcase>
+    <testcase classname="TypeScript Types Request type aliases should accept QualifiedRequest" name="TypeScript Types Request type aliases should accept QualifiedRequest" time="0">
+    </testcase>
+    <testcase classname="TypeScript Types Request type aliases should accept QualifiedRequest with optional fields" name="TypeScript Types Request type aliases should accept QualifiedRequest with optional fields" time="0.001">
+    </testcase>
+    <testcase classname="TypeScript Types Type compatibility should allow SimpleRequest to be used as Request" name="TypeScript Types Type compatibility should allow SimpleRequest to be used as Request" time="0">
+    </testcase>
+    <testcase classname="TypeScript Types Type compatibility should allow QualifiedRequest to be used as ApiRequest" name="TypeScript Types Type compatibility should allow QualifiedRequest to be used as ApiRequest" time="0">
+    </testcase>
+  </testsuite>
+  <testsuite name="EvatrMigrationHelper" errors="0" failures="0" skipped="0" timestamp="2026-01-22T16:46:36" time="2.524" tests="12">
+    <testcase classname="EvatrMigrationHelper checkSimple should perform simple validation and return expected format" name="EvatrMigrationHelper checkSimple should perform simple validation and return expected format" time="0.015">
+    </testcase>
+    <testcase classname="EvatrMigrationHelper checkSimple should include raw XML when requested" name="EvatrMigrationHelper checkSimple should include raw XML when requested" time="0.001">
+    </testcase>
+    <testcase classname="EvatrMigrationHelper checkSimple should handle errors gracefully" name="EvatrMigrationHelper checkSimple should handle errors gracefully" time="0.001">
+    </testcase>
+    <testcase classname="EvatrMigrationHelper checkSimple should fallback to 500 when error.http is undefined" name="EvatrMigrationHelper checkSimple should fallback to 500 when error.http is undefined" time="0.001">
+    </testcase>
+    <testcase classname="EvatrMigrationHelper checkQualified should perform qualified validation and return expected format" name="EvatrMigrationHelper checkQualified should perform qualified validation and return expected format" time="0.001">
+    </testcase>
+    <testcase classname="EvatrMigrationHelper checkQualified should handle errors gracefully" name="EvatrMigrationHelper checkQualified should handle errors gracefully" time="0.001">
+    </testcase>
+    <testcase classname="EvatrMigrationHelper checkQualified should fallback to 500 when error.http is undefined in checkQualified" name="EvatrMigrationHelper checkQualified should fallback to 500 when error.http is undefined in checkQualified" time="0.001">
+    </testcase>
+    <testcase classname="EvatrMigrationHelper checkQualified should include raw response when includeRaw is true" name="EvatrMigrationHelper checkQualified should include raw response when includeRaw is true" time="0.001">
+    </testcase>
+    <testcase classname="EvatrMigrationHelper ResultType enum should have correct values" name="EvatrMigrationHelper ResultType enum should have correct values" time="0.001">
+    </testcase>
+    <testcase classname="EvatrMigrationHelper getResultDescription should return correct description for NOT_RETURNED" name="EvatrMigrationHelper getResultDescription should return correct description for NOT_RETURNED" time="0.001">
+    </testcase>
+    <testcase classname="EvatrMigrationHelper getResultDescription should return undefined for unknown result type" name="EvatrMigrationHelper getResultDescription should return undefined for unknown result type" time="0.001">
+    </testcase>
+    <testcase classname="EvatrMigrationHelper mapStatusToErrorCode should return 999 for unmapped status codes" name="EvatrMigrationHelper mapStatusToErrorCode should return 999 for unmapped status codes" time="0">
+    </testcase>
+  </testsuite>
+  <testsuite name="Integration Tests" errors="0" failures="0" skipped="0" timestamp="2026-01-22T16:46:36" time="2.501" tests="15">
+    <testcase classname="Integration Tests Module exports should export all main classes and utilities" name="Integration Tests Module exports should export all main classes and utilities" time="0.003">
+    </testcase>
+    <testcase classname="Integration Tests Module exports should create client instance" name="Integration Tests Module exports should create client instance" time="0.001">
+    </testcase>
+    <testcase classname="Integration Tests VAT-ID validation workflow should validate VAT-ID format before API call" name="Integration Tests VAT-ID validation workflow should validate VAT-ID format before API call" time="0.001">
+    </testcase>
+    <testcase classname="Integration Tests VAT-ID validation workflow should format VAT-IDs consistently" name="Integration Tests VAT-ID validation workflow should format VAT-IDs consistently" time="0">
+    </testcase>
+    <testcase classname="Integration Tests VAT-ID validation workflow should validate business rules" name="Integration Tests VAT-ID validation workflow should validate business rules" time="0.001">
+    </testcase>
+    <testcase classname="Integration Tests Status message handling should load and use status messages" name="Integration Tests Status message handling should load and use status messages" time="0">
+    </testcase>
+    <testcase classname="Integration Tests Status message handling should categorize status messages correctly" name="Integration Tests Status message handling should categorize status messages correctly" time="0.001">
+    </testcase>
+    <testcase classname="Integration Tests Status message handling should provide status checking utilities" name="Integration Tests Status message handling should provide status checking utilities" time="0">
+    </testcase>
+    <testcase classname="Integration Tests Utility functions integration should provide comprehensive country information" name="Integration Tests Utility functions integration should provide comprehensive country information" time="0">
+    </testcase>
+    <testcase classname="Integration Tests Utility functions integration should validate VAT-IDs for different countries" name="Integration Tests Utility functions integration should validate VAT-IDs for different countries" time="0.001">
+    </testcase>
+    <testcase classname="Integration Tests Utility functions integration should provide test data for development" name="Integration Tests Utility functions integration should provide test data for development" time="0.001">
+    </testcase>
+    <testcase classname="Integration Tests Error handling integration should handle invalid VAT-ID formats gracefully" name="Integration Tests Error handling integration should handle invalid VAT-ID formats gracefully" time="0.009">
+    </testcase>
+    <testcase classname="Integration Tests Error handling integration should handle missing required fields" name="Integration Tests Error handling integration should handle missing required fields" time="0.001">
+    </testcase>
+    <testcase classname="Integration Tests Configuration and customization should accept custom configuration" name="Integration Tests Configuration and customization should accept custom configuration" time="0">
+    </testcase>
+    <testcase classname="Integration Tests Configuration and customization should allow status message cache management" name="Integration Tests Configuration and customization should allow status message cache management" time="0">
+    </testcase>
+  </testsuite>
+  <testsuite name="EvatrClient External Tests" errors="0" failures="0" skipped="0" timestamp="2026-01-22T16:46:36" time="2.977" tests="17">
+    <testcase classname="EvatrClient External Tests validateSimple - External API should perform simple validation against real API with valid German VAT-ID" name="EvatrClient External Tests validateSimple - External API should perform simple validation against real API with valid German VAT-ID" time="0.085">
+    </testcase>
+    <testcase classname="EvatrClient External Tests validateSimple - External API should handle invalid VAT-ID format in external API call" name="EvatrClient External Tests validateSimple - External API should handle invalid VAT-ID format in external API call" time="0.01">
+    </testcase>
+    <testcase classname="EvatrClient External Tests validateSimple - External API should handle missing required fields in external API call" name="EvatrClient External Tests validateSimple - External API should handle missing required fields in external API call" time="0.001">
+    </testcase>
+    <testcase classname="EvatrClient External Tests validateSimple - External API should normalize VAT-IDs before sending to external API" name="EvatrClient External Tests validateSimple - External API should normalize VAT-IDs before sending to external API" time="0.029">
+    </testcase>
+    <testcase classname="EvatrClient External Tests validateQualified - External API should perform qualified validation against real API" name="EvatrClient External Tests validateQualified - External API should perform qualified validation against real API" time="0.031">
+    </testcase>
+    <testcase classname="EvatrClient External Tests validateQualified - External API should handle qualified validation with minimal data" name="EvatrClient External Tests validateQualified - External API should handle qualified validation with minimal data" time="0.027">
+    </testcase>
+    <testcase classname="EvatrClient External Tests validateQualified - External API should reject qualified validation with invalid VAT-IDs" name="EvatrClient External Tests validateQualified - External API should reject qualified validation with invalid VAT-IDs" time="0.001">
+    </testcase>
+    <testcase classname="EvatrClient External Tests getStatusMessages - External API should fetch status messages from real API" name="EvatrClient External Tests getStatusMessages - External API should fetch status messages from real API" time="0.019">
+    </testcase>
+    <testcase classname="EvatrClient External Tests getStatusMessages - External API should return status messages with expected content" name="EvatrClient External Tests getStatusMessages - External API should return status messages with expected content" time="0.018">
+    </testcase>
+    <testcase classname="EvatrClient External Tests getAvailability - External API should fetch availability map from real API" name="EvatrClient External Tests getAvailability - External API should fetch availability map from real API" time="0.018">
+    </testcase>
+    <testcase classname="EvatrClient External Tests getAvailability - External API should contain expected EU member states" name="EvatrClient External Tests getAvailability - External API should contain expected EU member states" time="0.026">
+    </testcase>
+    <testcase classname="EvatrClient External Tests getAvailability - External API should have at least some available states" name="EvatrClient External Tests getAvailability - External API should have at least some available states" time="0.016">
+    </testcase>
+    <testcase classname="EvatrClient External Tests Error handling with real API should handle network timeouts gracefully" name="EvatrClient External Tests Error handling with real API should handle network timeouts gracefully" time="0.072">
+    </testcase>
+    <testcase classname="EvatrClient External Tests Error handling with real API should handle API errors with proper error structure" name="EvatrClient External Tests Error handling with real API should handle API errors with proper error structure" time="0.065">
+    </testcase>
+    <testcase classname="EvatrClient External Tests Real API response validation should validate that API responses match expected structure" name="EvatrClient External Tests Real API response validation should validate that API responses match expected structure" time="0.038">
+    </testcase>
+    <testcase classname="EvatrClient External Tests Real API response validation should validate status messages API response structure" name="EvatrClient External Tests Real API response validation should validate status messages API response structure" time="0.025">
+    </testcase>
+    <testcase classname="EvatrClient External Tests Real API response validation should validate availability API response structure" name="EvatrClient External Tests Real API response validation should validate availability API response structure" time="0.022">
+    </testcase>
+  </testsuite>
+</testsuites>
