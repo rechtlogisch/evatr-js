@@ -22,7 +22,7 @@
     "lint:fix": "eslint src/**/*.ts --fix",
     "lint": "eslint src/**/*.ts",
     "prepublishOnly": "npm run build",
-    "test:ci": "jest --coverage --reporters=jest-junit --watchAll=false",
+    "test:ci": "jest --coverage --reporters=default --reporters=jest-junit --watchAll=false --testPathIgnorePatterns='/*.external.test.ts' --runInBand --detectOpenHandles --logHeapUsage",
     "test:coverage": "jest --coverage",
     "test:external": "jest --testPathPatterns='/*.external.test.ts'",
     "test:smoke": "jest --silent --verbose=false --testPathIgnorePatterns='/*.external.test.ts'",
