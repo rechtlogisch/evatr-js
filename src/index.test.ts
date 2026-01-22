@@ -4,7 +4,6 @@
 
 import {
   EvatrClient,
-  EvatrApiError,
   EvatrClientConfig,
   Availability,
   ExtendedResponse,
