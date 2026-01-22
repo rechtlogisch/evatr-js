@@ -342,6 +342,7 @@ describe('EvatrMigrationHelper', () => {
         status: 'evatr-0000',
         vatIdOwn: 'DE123456789',
         vatIdForeign: 'ATU12345678',
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         street: 'X' as any, // Unknown result type
       };
 

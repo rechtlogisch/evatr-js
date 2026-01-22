@@ -83,14 +83,18 @@ describe('EvatrUtils', () => {
       expect(EvatrUtils.explainQualifiedResultCode('B')).toBe(
         'Die Angaben stimmen mit den registrierten Daten nicht überein.'
       );
-      expect(EvatrUtils.explainQualifiedResultCode('C')).toBe('Die Angaben wurden nicht angefragt.');
+      expect(EvatrUtils.explainQualifiedResultCode('C')).toBe(
+        'Die Angaben wurden nicht angefragt.'
+      );
       expect(EvatrUtils.explainQualifiedResultCode('D')).toBe(
         'Die Angaben wurden vom EU-Mitgliedsstaat nicht mitgeteilt.'
       );
     });
 
     it('should return unknown for invalid result codes', () => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       expect(EvatrUtils.explainQualifiedResultCode('X' as any)).toBe('Unknown validation result');
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       expect(EvatrUtils.explainQualifiedResultCode('Z' as any)).toBe('Unknown validation result');
     });
   });

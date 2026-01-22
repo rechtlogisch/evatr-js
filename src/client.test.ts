@@ -17,18 +17,15 @@ jest.mock('./status-loader');
 const mockedStatusMessages = StatusMessages as jest.Mocked<typeof StatusMessages>;
 
 // Create a mock axios instance
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 let errorInterceptorCallback: ((error: any) => any) | null = null;
-let successInterceptorCallback: ((response: any) => any) | null = null;
 const mockAxiosInstance = {
   post: jest.fn(),
   get: jest.fn(),
   interceptors: {
     response: {
       use: jest.fn((onFulfilled, onRejected) => {
-        // Store the interceptor callbacks so we can invoke them
-        if (onFulfilled) {
-          successInterceptorCallback = onFulfilled;
-        }
+        // Store the error interceptor callback so we can invoke it
         if (onRejected) {
           errorInterceptorCallback = onRejected;
         }
@@ -45,9 +42,8 @@ describe('EvatrClient', () => {
     // Setup axios.create mock to return our mock instance
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     mockedAxios.create.mockReturnValue(mockAxiosInstance as any);
-    // Reset the interceptor callbacks
+    // Reset the interceptor callback
     errorInterceptorCallback = null;
-    successInterceptorCallback = null;
 
     client = new EvatrClient();
     jest.clearAllMocks();
@@ -98,6 +94,7 @@ describe('EvatrClient', () => {
       // Test the interceptor branch: error.response?.data?.message || error.message || 'Unknown error'
       // This tests line 47 where error.response?.data?.message is the first branch
       // The interceptor is set up in the constructor and will be invoked when axios rejects
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const error: any = {
         response: {
           status: 400,
@@ -134,6 +131,7 @@ describe('EvatrClient', () => {
     it('should use error.response.data.message when available', async () => {
       // Test handleError branch: error.message || 'Unknown error occurred'
       // When error has a message, it should be used
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const error: any = {
         message: 'Custom error message',
         response: {
@@ -352,6 +350,7 @@ describe('EvatrClient', () => {
       );
 
       expect(result.status).toBe('evatr-0000');
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       expect((result as any).valid).toBe(true);
     });
   });
