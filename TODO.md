@@ -1,6 +1,4 @@
 - [ ] Refactor status-loader
     - [ ] Remove caching mechanism
     - [ ] Rename to status
-- [ ] Increase code coverage
 - [ ] Fix commented parts of test
-- [ ] Remove CAUTION in README.md
