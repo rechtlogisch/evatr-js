@@ -39,11 +39,16 @@ jobs:
         NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
     - name: Create GitHub Release
-      uses: actions/create-release@v1
+      uses: comnoco/create-release@v2
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         tag_name: ${{ github.ref }}
-        release_name: Release ${{ github.ref }}
+        release_name: ${{ github.ref }}
+        release_body: |
+          🚀 What’s in this Release:
+          * 🔧 TODO: Add release notes here
+
+          **Full Changelog**: https://github.com/rechtlogisch/evatr-js/compare/${{ github.ref }}...${{ github.ref }}
         draft: false
         prerelease: false
