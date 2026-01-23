@@ -1,6 +1,6 @@
 {
   "name": "evatr-api",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "Checks a VAT-ID using the eVatR REST-API of the German Federal Central Tax Office (Bundeszentralamt für Steuern, BZSt)",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
