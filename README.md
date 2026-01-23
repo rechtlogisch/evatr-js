@@ -8,14 +8,11 @@
 
 > Checks a VAT-ID using the eVatR REST-API of the German Federal Central Tax Office (Bundeszentralamt für Steuern, BZSt)
 
-> [!CAUTION]
-> This package is in early development and is not yet ready for production use. It is currently being tested and may undergo significant changes.
-
 > [!IMPORTANT]
 > This is an unofficial wrapper for the eVatR API. For official documentation and terms of use, please refer to the [German Federal Central Tax Office (BZSt)](https://www.bzst.de/DE/Unternehmen/Identifikationsnummern/Umsatzsteuer-Identifikationsnummer/umsatzsteuer-identifikationsnummer_node.html) website.
 
 > [!NOTE]
-> This package uses the new REST-API released in July 2025. The old XML-RPC API is being discontinued and will be sunset on **November 30th, 2025** (based on information from BZSt-Newsletter USTKV 01/2025 dated July 1st, 2025).
+> This package uses the new REST-API released in July 2025. The old XML-RPC API is being discontinued and was sunset on **November 30th, 2025** (based on information from BZSt-Newsletter USTKV 01/2025 dated July 1st, 2025).
 
 ## Installation
 
@@ -245,7 +242,7 @@ const testIds = EvatrUtils.getTestVatIds();
 For users migrating from the [evatr](https://github.com/qqilihq/evatr) library, we provide a migration helper that maintains API compatibility.
 
 > [!IMPORTANT]
-> The migration helper was introduced because the German Federal Central Tax Office is **sunsetting the XML-RPC API on November 30th, 2025**. This helper allows existing code to work with minimal changes while using the new REST API under the hood.
+> The migration helper was introduced because the German Federal Central Tax Office **sunset the XML-RPC API on November 30th, 2025**. This helper allows existing code to work with minimal changes while using the new REST API under the hood.
 
 ### Why the Migration Helper?
 
