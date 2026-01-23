@@ -1,6 +1,6 @@
 /**
  * Migration helper for backward compatibility with the evatr library
- * The XML-RPC eVatR is planned to be sunset on 2025-11-30
+ * The XML-RPC eVatR was sunset on 2025-11-30
  *
  * Provides a similar API as https://github.com/qqilihq/evatr
  *
