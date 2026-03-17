@@ -17,7 +17,7 @@ describe('StatusMessages', () => {
       status: 'evatr-0000',
       category: 'Result',
       http: 200,
-      message: 'Die angefragte Ust-IdNr. ist zum Anfragezeitpunkt gültig.',
+      message: 'Die angefragte USt-IdNr. ist zum Anfragezeitpunkt gültig.',
     },
     {
       status: 'evatr-0004',
@@ -49,6 +49,9 @@ describe('StatusMessages', () => {
 
   describe('getStatusMessages', () => {
     it('should load status messages from file when available', () => {
+      // Enable cache so getStatusMessages() uses file load path
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (StatusMessages as any).cache = true;
       mockedExistsSync.mockReturnValue(true);
       mockedReadFileSync.mockReturnValue(JSON.stringify(mockStatusMessages));
 
@@ -57,6 +60,9 @@ describe('StatusMessages', () => {
       expect(messages['evatr-0000']).toEqual(mockStatusMessages[0]);
       expect(messages['evatr-0004']).toEqual(mockStatusMessages[1]);
       expect(messages['evatr-2002']).toEqual(mockStatusMessages[2]);
+
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (StatusMessages as any).cache = false;
     });
 
     it('should fallback to constants when file not available', () => {
@@ -208,7 +214,7 @@ describe('StatusMessages', () => {
       expect(http200Messages.map((m) => m.status)).toContain('evatr-2008');
 
       const http400Messages = StatusMessages.getStatusMessagesByHttp(400);
-      expect(http400Messages).toHaveLength(7);
+      expect(http400Messages).toHaveLength(6);
     });
   });
 
@@ -265,8 +271,9 @@ describe('StatusMessages', () => {
         Hint: 10,
       });
       expect(stats.byHttp).toEqual({
+        0: 1, // evatr-0001 has no http in API
         200: 4,
-        400: 7,
+        400: 6,
         403: 3,
         404: 2,
         500: 7,
