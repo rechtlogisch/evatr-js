@@ -58,190 +58,172 @@ export const VATID_PATTERNS: Record<string, RegExp> = {
  */
 export const STATUS_MESSAGES: Record<string, StatusMessage> = {
   'evatr-0000': {
-    status: 'evatr-0000',
-    category: 'Result',
-    http: 200,
-    message: 'Die angefragte Ust-IdNr. ist zum Anfragezeitpunkt gültig.',
+    'status': 'evatr-0000',
+    'message': 'Die angefragte USt-IdNr. ist zum Anfragezeitpunkt gültig.',
+    'category': 'Result',
+    'http': 200
   },
   'evatr-0001': {
-    status: 'evatr-0001',
-    category: 'Hint',
-    http: 400,
-    field: 'datenschutz',
-    message: 'Bitte bestätigen Sie den Datenschutzhinweis.',
+    'status': 'evatr-0001',
+    'message': 'Bitte bestätigen Sie den Datenschutzhinweis.',
+    'category': 'Hint',
+    'field': 'datenschutz'
   },
   'evatr-0002': {
-    status: 'evatr-0002',
-    category: 'Hint',
-    http: 400,
-    field: 'angefragteUstid',
-    message: 'Mindestens eins der Pflichtfelder ist nicht besetzt.',
+    'status': 'evatr-0002',
+    'message': 'Mindestens eins der Pflichtfelder ist nicht besetzt.',
+    'category': 'Hint',
+    'http': 400,
+    'field': 'angefragteUstid'
   },
   'evatr-0003': {
-    status: 'evatr-0003',
-    category: 'Hint',
-    http: 400,
-    field: 'firmenname,ort',
-    message:
-      'Die angefragte Ust-IdNr. ist zum Anfragezeitpunkt gültig. Mindestens eines der Pflichtfelder für eine qualifizierte Bestätigungsanfrage ist nicht besetzt.',
+    'status': 'evatr-0003',
+    'message': 'Die angefragte USt-IdNr. ist zum Anfragezeitpunkt gültig. Mindestens eines der Pflichtfelder für eine qualifizierte Bestätigungsanfrage ist nicht besetzt.',
+    'category': 'Hint',
+    'http': 400,
+    'field': 'firmenname,ort'
   },
   'evatr-0004': {
-    status: 'evatr-0004',
-    category: 'Error',
-    http: 400,
-    field: 'anfragendeUstid',
-    message:
-      'Die anfragende DE Ust-IdNr. ist syntaktisch falsch. Sie passt nicht in das deutsche Erzeugungsschema.',
+    'status': 'evatr-0004',
+    'message': 'Die anfragende DE USt-IdNr. ist syntaktisch falsch. Sie passt nicht in das deutsche Erzeugungsschema.',
+    'category': 'Error',
+    'http': 400,
+    'field': 'anfragendeUstid'
   },
   'evatr-0005': {
-    status: 'evatr-0005',
-    category: 'Error',
-    http: 400,
-    field: 'angefragteUstid',
-    message: 'Die angegebene angefragte Ust-IdNr. ist syntaktisch falsch.',
+    'status': 'evatr-0005',
+    'message': 'Die angegebene angefragte USt-IdNr. ist syntaktisch falsch.',
+    'category': 'Error',
+    'http': 400,
+    'field': 'angefragteUstid'
   },
   'evatr-0006': {
-    status: 'evatr-0006',
-    category: 'Hint',
-    http: 403,
-    field: 'anfragendeUstid',
-    message: 'Die anfragende DE USt-IdNr. ist nicht berechtigt eine DE Ust-IdNr. anzufragen.',
+    'status': 'evatr-0006',
+    'message': 'Die anfragende DE USt-IdNr. ist nicht berechtigt eine DE USt-IdNr. anzufragen.',
+    'category': 'Hint',
+    'http': 403,
+    'field': 'anfragendeUstid'
   },
   'evatr-0007': {
-    status: 'evatr-0007',
-    category: 'Hint',
-    http: 403,
-    message: 'Fehlerhafter Aufruf.',
+    'status': 'evatr-0007',
+    'message': 'Fehlerhafter Aufruf.',
+    'category': 'Hint',
+    'http': 403
   },
   'evatr-0008': {
-    status: 'evatr-0008',
-    category: 'Hint',
-    http: 403,
-    message:
-      'Die maximale Anzahl von qualifizierten Bestätigungsabfragen für diese Session wurde erreicht. Bitte starten Sie erneut mit einer einfachen Bestätigungsabfrage.',
+    'status': 'evatr-0008',
+    'message': 'Die maximale Anzahl von qualifizierten Bestätigungsabfragen für diese Session wurde erreicht. Bitte starten Sie erneut mit einer einfachen Bestätigungsabfrage.',
+    'category': 'Hint',
+    'http': 403
   },
   'evatr-0011': {
-    status: 'evatr-0011',
-    category: 'Error',
-    http: 503,
-    message:
-      'Eine Bearbeitung Ihrer Anfrage ist zurzeit nicht möglich. Bitte versuchen Sie es später noch einmal.',
+    'status': 'evatr-0011',
+    'message': 'Eine Bearbeitung Ihrer Anfrage ist zurzeit nicht möglich. Bitte versuchen Sie es später noch einmal.',
+    'category': 'Error',
+    'http': 503
   },
   'evatr-0012': {
-    status: 'evatr-0012',
-    category: 'Error',
-    http: 400,
-    field: 'angefragteUstid',
-    message:
-      'Die angefragte USt-IdNr. ist syntaktisch falsch. Sie passt nicht in das Erzeugungsschema.',
+    'status': 'evatr-0012',
+    'message': 'Die angefragte USt-IdNr. ist syntaktisch falsch. Sie passt nicht in das Erzeugungsschema.',
+    'category': 'Error',
+    'http': 400,
+    'field': 'angefragteUstid'
   },
   'evatr-0013': {
-    status: 'evatr-0013',
-    category: 'Error',
-    http: 503,
-    message:
-      'Eine Bearbeitung Ihrer Anfrage ist zurzeit nicht möglich. Bitte versuchen Sie es später noch einmal.',
+    'status': 'evatr-0013',
+    'message': 'Eine Bearbeitung Ihrer Anfrage ist zurzeit nicht möglich. Bitte versuchen Sie es später noch einmal.',
+    'category': 'Error',
+    'http': 503
   },
   'evatr-1001': {
-    status: 'evatr-1001',
-    category: 'Error',
-    http: 503,
-    message:
-      'Eine Bearbeitung Ihrer Anfrage ist zurzeit nicht möglich. Bitte versuchen Sie es später noch einmal.',
+    'status': 'evatr-1001',
+    'message': 'Eine Bearbeitung Ihrer Anfrage ist zurzeit nicht möglich. Bitte versuchen Sie es später noch einmal.',
+    'category': 'Error',
+    'http': 503
   },
   'evatr-1002': {
-    status: 'evatr-1002',
-    category: 'Error',
-    http: 500,
-    message:
-      'Eine Bearbeitung Ihrer Anfrage ist zurzeit nicht möglich. Bitte versuchen Sie es später noch einmal.',
+    'status': 'evatr-1002',
+    'message': 'Eine Bearbeitung Ihrer Anfrage ist zurzeit nicht möglich. Bitte versuchen Sie es später noch einmal.',
+    'category': 'Error',
+    'http': 500
   },
   'evatr-1003': {
-    status: 'evatr-1003',
-    category: 'Error',
-    http: 500,
-    message:
-      'Eine Bearbeitung Ihrer Anfrage ist zurzeit nicht möglich. Bitte versuchen Sie es später noch einmal.',
+    'status': 'evatr-1003',
+    'message': 'Eine Bearbeitung Ihrer Anfrage ist zurzeit nicht möglich. Bitte versuchen Sie es später noch einmal.',
+    'category': 'Error',
+    'http': 500
   },
   'evatr-1004': {
-    status: 'evatr-1004',
-    category: 'Error',
-    http: 500,
-    message:
-      'Eine Bearbeitung Ihrer Anfrage ist zurzeit nicht möglich. Bitte versuchen Sie es später noch einmal.',
+    'status': 'evatr-1004',
+    'message': 'Eine Bearbeitung Ihrer Anfrage ist zurzeit nicht möglich. Bitte versuchen Sie es später noch einmal.',
+    'category': 'Error',
+    'http': 500
   },
   'evatr-2001': {
-    status: 'evatr-2001',
-    category: 'Hint',
-    http: 404,
-    field: 'angefragteUstid',
-    message: 'Die angefragte USt-IdNr. ist zum Anfragezeitpunkt nicht vergeben.',
+    'status': 'evatr-2001',
+    'message': 'Die angefragte USt-IdNr. ist zum Anfragezeitpunkt nicht vergeben.',
+    'category': 'Hint',
+    'http': 404,
+    'field': 'angefragteUstid'
   },
   'evatr-2002': {
-    status: 'evatr-2002',
-    category: 'Hint',
-    http: 200,
-    field: 'angefragteUstid',
-    message:
-      'Die angefragte USt-IdNr. ist zum Anfragezeitpunkt nicht gültig. Sie ist erst gültig ab dem Datum im Feld gueltigAb.',
+    'status': 'evatr-2002',
+    'message': 'Die angefragte USt-IdNr. ist zum Anfragezeitpunkt nicht gültig. Sie ist erst gültig ab dem Datum im Feld gueltigAb.',
+    'category': 'Hint',
+    'http': 200,
+    'field': 'angefragteUstid'
   },
   'evatr-2003': {
-    status: 'evatr-2003',
-    category: 'Error',
-    http: 400,
-    field: 'angefragteUstid',
-    message: 'Das angegebene Länderkennzeichen der angefragten USt-IdNr. ist nicht gültig.',
+    'status': 'evatr-2003',
+    'message': 'Das angegebene Länderkennzeichen der angefragten USt-IdNr. ist nicht gültig.',
+    'category': 'Error',
+    'http': 400,
+    'field': 'angefragteUstid'
   },
   'evatr-2004': {
-    status: 'evatr-2004',
-    category: 'Error',
-    http: 500,
-    message:
-      'Eine Bearbeitung Ihrer Anfrage ist zurzeit nicht möglich. Bitte versuchen Sie es später noch einmal.',
+    'status': 'evatr-2004',
+    'message': 'Eine Bearbeitung Ihrer Anfrage ist zurzeit nicht möglich. Bitte versuchen Sie es später noch einmal.',
+    'category': 'Error',
+    'http': 500
   },
   'evatr-2005': {
-    status: 'evatr-2005',
-    category: 'Error',
-    http: 404,
-    field: 'anfragendeUstid',
-    message: 'Die angegebene eigene DE Ust-IdNr. ist zum Anfragezeitpunkt nicht gültig.',
+    'status': 'evatr-2005',
+    'message': 'Die angegebene eigene DE USt-IdNr. ist zum Anfragezeitpunkt nicht gültig.',
+    'category': 'Error',
+    'http': 404,
+    'field': 'anfragendeUstid'
   },
   'evatr-2006': {
-    status: 'evatr-2006',
-    category: 'Hint',
-    http: 200,
-    field: 'angefragteUstid',
-    message:
-      'Die angefragte Ust-IdNr. ist zum Anfragezeitpunkt nicht gültig. Sie war gültig im Zeitraum, der durch die Werte in den Feldern gueltigAb und gueltigBis beschrieben ist.',
+    'status': 'evatr-2006',
+    'message': 'Die angefragte USt-IdNr. ist zum Anfragezeitpunkt nicht gültig. Sie war gültig im Zeitraum, der durch die Werte in den Feldern gueltigAb und gueltigBis beschrieben ist.',
+    'category': 'Hint',
+    'http': 200,
+    'field': 'angefragteUstid'
   },
   'evatr-2007': {
-    status: 'evatr-2007',
-    category: 'Error',
-    http: 500,
-    message:
-      'Bei der Verarbeitung der Daten aus dem angefragten EU-Mitgliedstaat ist ein Fehler aufgetreten. Ihre Anfrage kann deshalb nicht bearbeitet werden.',
+    'status': 'evatr-2007',
+    'message': 'Bei der Verarbeitung der Daten aus dem angefragten EU-Mitgliedstaat ist ein Fehler aufgetreten. Ihre Anfrage kann deshalb nicht bearbeitet werden.',
+    'category': 'Error',
+    'http': 500
   },
   'evatr-2008': {
-    status: 'evatr-2008',
-    category: 'Hint',
-    http: 200,
-    message:
-      'Die angefragte Ust-IdNr. ist zum Anfragezeitpunkt gültig. Für die qualifizierte Bestätigungsanfrage liegt einer Besonderheit vor. Für Rückfragen wenden Sie sich an das BZSt.',
+    'status': 'evatr-2008',
+    'message': 'Die angefragte USt-IdNr. ist zum Anfragezeitpunkt gültig. Für die qualifizierte Bestätigungsanfrage liegt einer Besonderheit vor. Für Rückfragen wenden Sie sich an das BZSt.',
+    'category': 'Hint',
+    'http': 200
   },
   'evatr-2011': {
-    status: 'evatr-2011',
-    category: 'Error',
-    http: 500,
-    message:
-      'Eine Bearbeitung Ihrer Anfrage ist zurzeit nicht möglich. Bitte versuchen Sie es später noch einmal.',
+    'status': 'evatr-2011',
+    'message': 'Eine Bearbeitung Ihrer Anfrage ist zurzeit nicht möglich. Bitte versuchen Sie es später noch einmal.',
+    'category': 'Error',
+    'http': 500
   },
   'evatr-3011': {
-    status: 'evatr-3011',
-    category: 'Error',
-    http: 500,
-    message:
-      'Eine Bearbeitung Ihrer Anfrage ist zurzeit nicht möglich. Bitte versuchen Sie es später noch einmal.',
-  },
+    'status': 'evatr-3011',
+    'message': 'Eine Bearbeitung Ihrer Anfrage ist zurzeit nicht möglich. Bitte versuchen Sie es später noch einmal.',
+    'category': 'Error',
+    'http': 500
+  }
 };
 
 /**

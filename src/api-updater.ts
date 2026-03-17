@@ -277,7 +277,7 @@ export class EvatrApiUpdater {
       const statusMessagesStr = JSON.stringify(statusMessagesObj, null, 2).replace(/"/g, "'");
 
       const newConstantsContent = constantsContent.replace(
-        /export const STATUS_MESSAGES: Record<string, ApiStatusMessage> = \{[\s\S]*?\};/,
+        /export const STATUS_MESSAGES: Record<string, StatusMessage> = \{[\s\S]*?\};/,
         `export const STATUS_MESSAGES: Record<string, StatusMessage> = ${statusMessagesStr};`
       );
 
@@ -340,16 +340,14 @@ export class EvatrApiUpdater {
     try {
       const apiStatusMessages: ApiStatusMessage[] = JSON.parse(readFileSync(filepath, 'utf8'));
 
-      const statusMessages: StatusMessage[] = apiStatusMessages.map(
-        (msg) => ({
-          status: msg.status,
-          message: msg.meldung,
-          category:
-            msg.kategorie === 'Ergebnis' ? 'Result' : msg.kategorie === 'Fehler' ? 'Error' : 'Hint',
-          http: msg.httpcode,
-        }),
-        {} as Record<string, StatusMessage>
-      );
+      const statusMessages: StatusMessage[] = apiStatusMessages.map((msg) => ({
+        status: msg.status,
+        message: msg.meldung,
+        category:
+          msg.kategorie === 'Ergebnis' ? 'Result' : msg.kategorie === 'Fehler' ? 'Error' : 'Hint',
+        ...(msg.httpcode !== undefined && { http: msg.httpcode }),
+        ...(msg.feld !== undefined && { field: msg.feld }),
+      }));
 
       await this.updateConstantsFile(statusMessages);
     } catch (error) {
