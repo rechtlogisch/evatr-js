@@ -3,6 +3,12 @@ name: Release
 on:
   release:
     types: [published]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Git tag or branch to deploy (e.g. v0.1.0, main)'
+        required: true
+        type: string
 
 permissions:
   contents: write
