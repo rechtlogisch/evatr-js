@@ -22,7 +22,7 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v6
       with:
-        ref: ${{ github.event.release.tag_name }}
+        ref: ${{ github.event_name == 'release' && github.event.release.tag_name || github.event.inputs.version }}
 
     - name: Use Node.js 24.x
       uses: actions/setup-node@v6
