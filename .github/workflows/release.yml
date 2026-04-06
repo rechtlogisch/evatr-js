@@ -1,9 +1,8 @@
 name: Release
 
 on:
-  push:
-    tags:
-      - 'v*'
+  release:
+    types: [published]
 
 permissions:
   contents: write
@@ -16,11 +15,13 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v6
+      with:
+        ref: ${{ github.event.release.tag_name }}
 
-    - name: Use Node.js 22.x
+    - name: Use Node.js 24.x
       uses: actions/setup-node@v6
       with:
-        node-version: 22.x
+        node-version: 24.x
         cache: 'npm'
         registry-url: 'https://registry.npmjs.org'
 
@@ -37,18 +38,3 @@ jobs:
       run: npm publish --provenance --access public
       env:
         NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-
-    - name: Create GitHub Release
-      uses: comnoco/create-release@v2
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        tag_name: ${{ github.ref }}
-        release_name: ${{ github.ref }}
-        release_body: |
-          🚀 What’s in this Release:
-          * 🔧 TODO: Add release notes here
-
-          **Full Changelog**: https://github.com/rechtlogisch/evatr-js/compare/${{ github.ref }}...${{ github.ref }}
-        draft: false
-        prerelease: false
