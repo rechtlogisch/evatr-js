@@ -209,7 +209,7 @@ class EvatrApiUpdater {
             const constantsContent = (0, fs_1.readFileSync)(constantsPath, 'utf8');
             // Replace the STATUS_MESSAGES object
             const statusMessagesStr = JSON.stringify(statusMessagesObj, null, 2).replace(/"/g, "'");
-            const newConstantsContent = constantsContent.replace(/export const STATUS_MESSAGES: Record<string, ApiStatusMessage> = \{[\s\S]*?\};/, `export const STATUS_MESSAGES: Record<string, StatusMessage> = ${statusMessagesStr};`);
+            const newConstantsContent = constantsContent.replace(/export const STATUS_MESSAGES: Record<string, StatusMessage> = \{[\s\S]*?\};/, `export const STATUS_MESSAGES: Record<string, StatusMessage> = ${statusMessagesStr};`);
             (0, fs_1.writeFileSync)(constantsPath, newConstantsContent);
             console.log('✅ Constants file updated');
         }
@@ -263,8 +263,9 @@ class EvatrApiUpdater {
                 status: msg.status,
                 message: msg.meldung,
                 category: msg.kategorie === 'Ergebnis' ? 'Result' : msg.kategorie === 'Fehler' ? 'Error' : 'Hint',
-                http: msg.httpcode,
-            }), {});
+                ...(msg.httpcode !== undefined && { http: msg.httpcode }),
+                ...(msg.feld !== undefined && { field: msg.feld }),
+            }));
             await this.updateConstantsFile(statusMessages);
         }
         catch (error) {
