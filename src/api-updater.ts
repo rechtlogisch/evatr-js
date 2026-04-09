@@ -326,7 +326,14 @@ export class EvatrApiUpdater {
         console.log('📋 Status Messages are up to date');
       }
 
-      console.log('\n✅ Update check completed');
+      const hasChanges = apiDocsResult.hasUpdate || statusResult.hasUpdate;
+      if (hasChanges) {
+        console.log(
+          '\n⚠️ API docs or status messages changes detected. Review the messages above and download/update as needed.'
+        );
+      } else {
+        console.log('\n✅ No changes detected - everything is up to date');
+      }
     } catch (error) {
       console.error('❌ Error during update check:', error);
       throw error;
