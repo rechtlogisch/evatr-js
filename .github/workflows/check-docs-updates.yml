@@ -13,11 +13,14 @@ jobs:
     steps:
       - name: Check BZSt connection
         run: |
-          curl -v -o /dev/null https://api.evatr.vies.bzst.de/api-docs 2>&1
-          if [ $? -ne 0 ]; then
-            echo "❌ Failed to connect to BZSt server"
-            exit 1
-          fi
+          set -euo pipefail
+
+          # Fail on HTTP errors, retry transient network/TLS issues, and cap runtime.
+          curl --fail --location \
+            --connect-timeout 10 --max-time 60 \
+            --retry 5 --retry-delay 3 --retry-all-errors \
+            -o /dev/null "https://api.evatr.vies.bzst.de/api-docs"
+
           echo "✅ Successfully connected to BZSt server"
 
       - name: Checkout code
