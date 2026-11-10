@@ -1,0 +1,14 @@
+{
+  // $schema provides code completion hints to IDEs.
+  "$schema": "https://github.com/IBM/audit-ci/raw/main/docs/schema.json",
+  // Fail on any vulnerability, matching the previous `npm audit` behaviour.
+  "low": true,
+  "allowlist": [
+    // False positive: CVE-2026-93753 was rejected on 2026-11-02, but the GHSA
+    // has not been withdrawn yet. No patched deepmerge version exists.
+    // Remove this entry once GitHub withdraws the advisory.
+    // https://github.com/TehShrike/deepmerge/issues/285
+    // https://github.com/github/advisory-database/issues/10910
+    "GHSA-gcqx-w48m-w2h4"
+  ]
+}

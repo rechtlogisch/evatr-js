@@ -57,6 +57,7 @@
     "@types/node": "^26.0.0",
     "@typescript-eslint/eslint-plugin": "^8.55.0",
     "@typescript-eslint/parser": "^8.55.0",
+    "audit-ci": "^7.1.0",
     "eslint": "^10.0.0",
     "globals": "^17.0.0",
     "jest": "^30.0.0",
@@ -70,7 +71,8 @@
     "axios": "^1.15.0"
   },
   "overrides": {
-    "glob": "^13.0"
+    "glob": "^14.0",
+    "minimatch": "^11.0"
   },
   "allowScripts": {
     "fsevents@2.3.3": true,
