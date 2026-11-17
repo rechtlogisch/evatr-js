@@ -27,7 +27,7 @@ jobs:
       run: npm ci
 
     - name: Run security audit
-      run: npx audit
+      run: npm audit
 
     - name: Run CodeQL Analysis
       uses: github/codeql-action/init@v4
